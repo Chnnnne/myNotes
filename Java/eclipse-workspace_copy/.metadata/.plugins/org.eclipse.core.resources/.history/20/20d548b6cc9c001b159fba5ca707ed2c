@@ -1,0 +1,16 @@
+package lanqiao.year2019_10th;
+
+import java.util.Scanner;
+
+public class 相关性分析 {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int k = sc.nextInt();
+		sc.nextLine();
+		String str = sc.nextLine();
+		System.out.println(k);
+		System.out.println(str);
+
+	}//main
+}

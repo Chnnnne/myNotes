@@ -1,0 +1,20 @@
+package nothing;
+
+import java.io.IOException;
+import java.util.Scanner;
+
+public class test {
+
+	public static void main(String[] args) throws IOException {
+//		String next = Reader.next();
+		int nextInt = Reader.nextInt();
+//		long nextLong = Reader.nextLong();
+//		double nextDouble = Reader.nextDouble();
+		String nextLine = Reader.nextLine();
+//		System.out.println(next);
+//		System.out.println(nextInt);
+//		System.out.println(nextLong);
+//		System.out.println(nextDouble);
+		System.out.println(nextLine);
+	}//main
+}

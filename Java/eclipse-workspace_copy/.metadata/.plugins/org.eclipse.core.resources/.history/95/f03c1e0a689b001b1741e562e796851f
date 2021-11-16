@@ -1,0 +1,98 @@
+package lanqiao.year2019_10th;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
+
+
+
+public class E迷宫 {
+	public static final int MAXN = 60;
+
+	static int g[][] = new int[MAXN][MAXN];
+	static int dist[][] = new int[MAXN][MAXN];
+	static int n = 30, m = 50;
+	static int dirx[] = {1,0,0,-1};//下左右上
+	static int diry[] = {0,-1,1,0};
+	static Character dirc[] = {'D','L','R','U'};
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		for (int i = 1; i <= n; i++) {
+			String str = sc.next();
+			char[] charArray = str.toCharArray();
+			for (int j = 1; j <= m; j++) {
+				g[i][j] = charArray[j-1]-'0';//很tm容易错的一步！，老师忘了-'0'
+			}
+		}
+		
+		
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= m; j++) {
+				dist[i][j] = -1;
+			}
+		}
+		//bfs
+		point start = new point(1, 1);
+		point end = new point(n, m);
+		
+		LinkedList<point> queue = new LinkedList<point>();
+		dist[n][m] = 0;
+		queue.offer(new point(n, m));
+		while(!queue.isEmpty()) {
+			point poll = queue.poll();
+//			System.out.println(poll);
+			int x = poll.x;
+			int y = poll.y;
+			if(poll.equals(start)) {
+				break;
+			}
+			for(int i = 0; i < 4; i++) {
+				int nextx = x + dirx[i];
+				int nexty = y + diry[i];
+				if(nextx>=1&&nextx<=30&&nexty>=1&&nexty<=50
+						&&dist[nextx][nexty]==-1&&g[nextx][nexty]==0) {
+					dist[nextx][nexty] = dist[x][y]+1;
+					queue.offer(new point(nextx, nexty));
+				}
+			}
+		}
+//		dfs(1,1);
+		//也可以
+		int x=1,y=1;
+		while(!(x==30&&y==50)) {
+			for(int i=0;i<4;i++) {
+				int nextx = x + dirx[i];
+				int nexty = y + diry[i];
+				if(nextx>=1&&nextx<=30&&nexty>=1&&nexty<=50
+						&&dist[nextx][nexty]==dist[x][y]-1) {
+					x = nextx;
+					y = nexty;
+					path.add(dirc[i]);
+					break;
+				}
+			}
+		}
+		path.forEach(c->System.out.print(c));
+	}// main
+	static boolean st[][] = new boolean[MAXN][MAXN];
+	static ArrayList<Character> path = new ArrayList<>();
+	private static void dfs(int x, int y) {
+		if(x==30&&y==50) {
+			System.out.println("I got it!");
+			return;
+		}
+		st[x][y] = true;
+		for(int i = 0 ; i < 4; i++) {
+			int nextx = x + dirx[i];
+			int nexty = y + diry[i];
+			if(nextx>=1&&nextx<=30&&nexty>=1&&nexty<=50
+					&&dist[nextx][nexty]==dist[x][y]-1&&!st[nextx][nexty]) {
+				path.add(dirc[i]);
+				dfs(nextx, nexty);
+				break;
+			}
+		}
+		
+	}
+
+}

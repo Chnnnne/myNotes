@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;OneNum&apos; in &apos;leetcode.P1052_爱生气的书店老板.maxSatisfied(...)&apos; to &apos;CstOnenum&apos;&#x0D;&#x0A;- Original project: &apos;AlgorithmPractice&apos;&#x0D;&#x0A;- Original element: &apos;leetcode.P1052_爱生气的书店老板.maxSatisfied(int[], int[], int).OneNum&apos;&#x0D;&#x0A;- Renamed element: &apos;OneNum&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;OneNum&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;leetcode{P1052_爱生气的书店老板.java[P1052_爱生气的书店老板~maxSatisfied~\[I~\[I~I@OneNum!462!474!466!471!I!0!false" name="CstOnenum" references="true" stamp="1614051235140" version="1.0"/>
+</session>

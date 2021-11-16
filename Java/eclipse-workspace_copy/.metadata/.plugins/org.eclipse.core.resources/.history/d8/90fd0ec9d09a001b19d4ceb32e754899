@@ -1,0 +1,44 @@
+package lanqiao.year2019_10th;
+
+import java.util.LinkedList;
+import java.util.Scanner;
+
+
+
+public class E迷宫 {
+	public static final int MAXN = 60;
+
+	static int g[][] = new int[MAXN][MAXN];
+	static int dist[][] = new int[MAXN][MAXN];
+	static int n = 30, m = 50;
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		for (int i = 1; i <= n; i++) {
+			String str = sc.next();
+			char[] charArray = str.toCharArray();
+			for (int j = 1; j <= m; j++) {
+				g[i][j] = charArray[j-1];
+			}
+		}
+		
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= m; j++) {
+				dist[i][j] = -1;
+			}
+		}
+		//bfs
+		point start = new point(1, 1);
+		point end = new point(n, m);
+		
+		dist[n][m] = -1;
+		LinkedList<point> queue = new LinkedList<point>();
+		dist[n][m] = 0;
+		queue.offer(new point(n, m));
+		while(!queue.isEmpty()) {
+			point poll = queue.poll();
+			if(poll.equals(start))
+		}
+	}// main
+
+}

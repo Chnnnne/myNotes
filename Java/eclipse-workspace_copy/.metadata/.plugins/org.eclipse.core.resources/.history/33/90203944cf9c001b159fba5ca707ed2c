@@ -1,0 +1,22 @@
+package lanqiao.year2019_10th;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class 相关性分析 {
+
+	public static void main(String[] args) {
+		ArrayList<Integer> alice = new ArrayList<Integer>();
+		ArrayList<Integer> bob = new ArrayList<Integer>();
+		Scanner sc = new Scanner(System.in);
+		int k = sc.nextInt();
+		sc.nextLine();//吞回车，让下一个nextline读入文章
+		String str = sc.nextLine();
+		int index = 0;
+		while(index!=-1) {
+			index = str.indexOf("Alice",index+1);
+			alice.add(index);
+		}
+
+	}//main
+}

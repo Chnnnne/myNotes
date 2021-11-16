@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="true"/>
+		<item key="wholeword" value="true"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<item key="selection" value="Reader"/>
+		<list key="findhistory">
+			<item value="sc"/>
+			<item value="count%9==0?9:count%9"/>
+			<item value="Reader"/>
+			<item value="vertx"/>
+			<item value="visited"/>
+			<item value="node"/>
+			<item value="maze"/>
+			<item value="=="/>
+		</list>
+		<list key="replacehistory">
+			<item value="Reader"/>
+			<item value="count"/>
+			<item value="sc"/>
+			<item value="j"/>
+			<item value="st"/>
+			<item value="mynode"/>
+			<item value="point1"/>
+			<item value="Point"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="816"/>
+		<item key="DIALOG_Y_ORIGIN" value="222"/>
+		<item key="DIALOG_WIDTH" value="307"/>
+		<item key="DIALOG_HEIGHT" value="454"/>
+		<item key="DIALOG_FONT_NAME" value="1|Microsoft YaHei UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Microsoft YaHei UI"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="268"/>
+		<item key="DIALOG_Y_ORIGIN" value="357"/>
+	</section>
+</section>

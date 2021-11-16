@@ -1,0 +1,70 @@
+package lanqiao.year2019_10th;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import javax.sound.midi.Soundbank;
+
+public class 相关性分析 {
+
+	public static void main(String[] args) {
+		ArrayList<Integer> alice = new ArrayList<Integer>();
+		ArrayList<Integer> bob = new ArrayList<Integer>();
+		Scanner sc = new Scanner(System.in);
+		int k = sc.nextInt();
+		sc.nextLine();// 吞回车，让下一个nextline读入文章
+		String str = sc.nextLine();
+		int index = -1;
+		while (true) {
+			// 找到了Alice之后
+			index = str.indexOf("Alice", index + 1);
+			if (index == -1)
+				break;
+			// 还要接着判断前后是否是字母
+			if (index == 0 && Check(str.charAt(index + 5))) {
+				alice.add(index);
+				continue;
+			}
+			if(index + 4 == str.length()-1 && Check(str.charAt(index - 1))) {
+				alice.add(index);
+				continue;
+			}
+			if(Check(str.charAt(index-1))&&Check(str.charAt(index+5))) {
+				System.out.println("ssss");
+				alice.add(index);
+				continue;
+			}
+		}
+		index = -1;
+		while (true) {
+			// 找到了Alice之后
+			index = str.indexOf("Bob", index + 1);
+			if (index == -1)
+				break;
+			// 还要接着判断前后是否是字母
+			if (index == 0 && Check(str.charAt(index + 5))) {
+				bob.add(index);
+				continue;
+			}
+			if(index + 4 == str.length()-1 && Check(str.charAt(index - 1))) {
+				bob.add(index);
+				continue;
+			}
+			if(Check(str.charAt(index-1))&&Check(str.charAt(index+5))) {
+				bob.add(index);
+				continue;
+			}
+		}
+		System.out.println(alice);
+		System.out.println(bob);
+
+	}
+
+	
+	//c不是字母的话返回true
+	private static boolean Check(char c) {
+		if((c>='a'&&c<='z')||(c>='A'&&c<='Z'))
+			return false;
+		return false;
+	}// main
+}

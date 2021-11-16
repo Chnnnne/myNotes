@@ -1,0 +1,17 @@
+package lanqiao.year2019_10th;
+
+import java.util.Scanner;
+
+public class 相关性分析 {
+
+	public static void main(String[] args) {
+//		Scanner sc = new Scanner(System.in);
+//		int k = sc.nextInt();
+//		sc.nextLine();//吞回车，让下一个nextline读入文章
+//		String str = sc.nextLine();
+		String str = "wang  awangchen";
+		int indexOf = str.indexOf("wang", 4);
+		System.out.println(indexOf);
+
+	}//main
+}

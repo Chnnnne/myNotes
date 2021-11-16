@@ -1,0 +1,12 @@
+package nothing;
+
+import java.util.Arrays;
+
+public class test {
+
+	public static void main(String[] args) {
+		String s ="aa|bb|cc";
+		String[] strArray = s.split("\\|");// ["aa","bb","cc"]
+		System.out.println(Arrays.toString(strArray));
+	}//main
+}

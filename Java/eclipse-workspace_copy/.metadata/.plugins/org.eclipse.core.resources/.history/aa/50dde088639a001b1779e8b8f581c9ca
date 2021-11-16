@@ -1,0 +1,8 @@
+package nothing;
+
+public class test {
+
+	public static void main(String[] args) {
+		System.out.printf("%+-30.12,f",-1587671.6594874651654);
+	}//main
+}

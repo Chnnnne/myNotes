@@ -1,0 +1,21 @@
+package lanqiao.year2019_10th;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class 外卖店优先级 {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int m = sc.nextInt();
+		int t = sc.nextInt();
+		//第key时间，有外卖的店家id-list
+		HashMap<Integer, ArrayList<Integer>> hm = new HashMap<Integer,ArrayList<Integer>>();
+		while (m-- != 0) {
+			int time = sc.nextInt();
+			int id = sc.nextInt();
+			
+		}
+	}// main
+}

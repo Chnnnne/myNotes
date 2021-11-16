@@ -1,0 +1,12 @@
+package nothing;
+
+import java.util.Arrays;
+
+public class test {
+
+	public static void main(String[] args) {
+		String s ="aaorbbandcc";
+		String[] strArray = s.split("and|or");// ["aa","bb","cc"]
+		System.out.println(Arrays.toString(strArray));
+	}//main
+}

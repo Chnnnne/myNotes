@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;矩阵快速幂.java&apos; to &apos;AlgorithmPractice/src/algorithm.递归与分治&apos;&#x0D;&#x0A;- Original project: &apos;AlgorithmPractice&apos;&#x0D;&#x0A;- Destination element: &apos;AlgorithmPractice/src/algorithm.递归与分治&apos;&#x0D;&#x0A;- Original element: &apos;algorithm.递归与分治.矩阵快速幂.java&apos;" description="Copy compilation unit" destination="/src&lt;algorithm.递归与分治" element1="/src&lt;algorithm.递归与分治{矩阵快速幂.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1611666989231" units="1" version="1.0"/>
+</session>
