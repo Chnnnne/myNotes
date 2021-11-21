@@ -1,4 +1,12 @@
+传统资源型社会->知识密集型社会
+
+
+
 # Linux
+
+
+
+
 
 ## 零、简介
 
@@ -124,9 +132,27 @@ cat 文件名、 more 文件名  按q退出 按空格一帧 回车一行
 
 
 
+
+
+## 五、有关配置文件
+
+**tmux**的配置文件是 `.tmux.conf`   放在云端的~家目录下。内容在配置文件夹里。
+
+**vim**的配置文件是 `.vimrc`  放在云端的~家目录下。内容在配置文件夹里。
+
+**bash**的配置文件：.bashrc 放在云端的~家目录下。里面有PATH等内容，在启动bash时会自动执行该文件。
+
+**bash的历史命令**文件是` .bash_history` 在云端的~目录下。`history`命令执行的是当前的1000条命令，退出bash后，才会把最新的命令更新到`.bash_histroy`中
+
+**git**的配置文件是`.gitconfig`,在云端的~目录下。存的是username、email、alias快捷键等
+
+**ssh**的配置文件夹在`.ssh`目录下, 里面的config文件存的是服务器的别名以及其对应的HostName和User。以及第一次访问别的服务器时所保存的信息，在known_hosts里。id_rsa以及.pub存的ssh-keygen生成的公钥和秘钥
+
+
+
 # AcWing Linux
 
-## 1.1常用文件管理命令
+## 1、常用文件管理命令
 
 ### 1、文件目录结构
 
@@ -413,7 +439,7 @@ cat [-AbeEnstTuv] [--help] [--version] fileName
 
 
 
-## 2.1 tmux 和 vim
+## 2、 tmux 和 vim
 
 ### 1、tmux
 
@@ -609,7 +635,7 @@ y总推荐做法：
 >
 > 2、对于变量使用，我们要加\$；
 >
-> 3、对于表达式求值，我们要用expr,但是要注意expr计算后的表达式的值输出在stdout里，我们要用\$()来得到值，或者用\`\`来获得（截获stdout），此外就是如果参与表达式的变量是数字的话，不用加引号。如果是字符串的话，最好加上" "，防止字符串包含空格  如
+> 3、对于表达式求值，我们要用expr,但是要注意expr计算后的表达式的值输出在stdout里，我们要用\$()来得到值，才能进一步应用，或者用\`\`来获得（截获stdout），此外就是如果参与表达式的变量是数字的话，不用加引号。如果是字符串的话，最好加上" "，防止字符串包含空格  如
 >
 > ```bash
 > `expr length "$str"` 等价于 ${#str}
@@ -706,7 +732,7 @@ echo wangchen
 echo "wangchen"
 name=nb
 echo $name
-echo ${name}
+echo ${name}  #加{}方便识别边界
 echo "wangchen ${name}"
 ```
 
@@ -1353,6 +1379,52 @@ yxc
 
 ### 15、[文件重定向](https://www.acwing.com/blog/content/9708/)
 
+每个进程默认打开3个文件描述符：
+
+- stdin标准输入，从命令行读取数据，文件描述符为0
+- stdout标准输出，向命令行输出数据，文件描述符为1
+- stderr标准错误输出，向命令行输出数据，文件描述符为2
+
+可以用文件重定向将这三个文件重定向到其他文件中。
+
+---
+
+#### **重定向命令列表**
+
+| 命令             | 说明                                  |
+| ---------------- | ------------------------------------- |
+| command > file   | 将stdout重定向到file中                |
+| command < file   | 将stdin重定向到file中                 |
+| command >> file  | 将stdout以追加方式重定向到file中      |
+| command n> file  | 将文件描述符n重定向到file中           |
+| command n>> file | 将文件描述符n以追加方式重定向到file中 |
+
+==说明：文件的重定向，无所谓前后。它的一般形式是 `>或< + 文件名`==
+	
+
+```bash
+	>或< 加上 文件名
+```
+
+
+
+#### **输入和输出重定向**
+
+```bash
+echo -e "Hello \c" > output.txt  # 将stdout重定向到output.txt中
+echo "World" >> output.txt  # 将字符串追加到output.txt中
+
+read str < output.txt  # 从output.txt中读取字符串
+
+echo $str  # 输出结果：Hello World
+```
+
+
+
+​	
+
+#### 一个例子	
+
 test.sh如下
 
 ```bash
@@ -1372,18 +1444,17 @@ echo $(expr "$a" + "$b")
 
 2.把stdout重定向到output.txt
 
-
-
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211031182039862.png" alt="image-20211031182039862" style="zoom:50%;" />
 
 ```bash
 ./test.sh < input.txt > output.txt
+./test.sh > output.txt < input.txt
 ```
 
-这两种写法均可
+这两种写法均可,因为文件的重定向的命令格式就是 
 
 ```bash
-./test.sh > output.txt < input.txt
+>或< 加上 文件名
 ```
 
 
@@ -1942,4 +2013,471 @@ Linux/Mac 系统 在 ~/.ssh 下，win系统在 /c/Documents and Settings/usernam
 
 
 
+
+
+
+
+
+## 6、thrift（未看）
+
+### 一、预备知识
+
+#### 1、软件系统架构-微服务
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116222935326.png" alt="image-20211116222935326" style="zoom: 50%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116222958801.png" alt="image-20211116222958801" style="zoom:50%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116223035643.png" alt="image-20211116223035643" style="zoom:50%;" /> <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116223124104.png" alt="image-20211116223124104" style="zoom: 25%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116223213118.png" alt="image-20211116223213118" style="zoom:33%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116223227194.png" alt="image-20211116223227194" style="zoom: 67%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116223311461.png" alt="image-20211116223311461" style="zoom:50%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116223540590.png" alt="image-20211116223540590" style="zoom:50%;" />
+
+维基上对其定义为：一种软件开发技术- 面向服务的体系结构（SOA）架构样式的一种变体，它提倡将单一应用程序划分成一组小的服务，服务之间互相协调、互相配合，为用户提供最终价值。每个服务运行在其独立的进程中，服务与服务间采用轻量级的通信机制互相沟通（通常是基于HTTP的RESTful API）。每个服务都围绕着具体业务进行构建，并且能够独立地部署到生产环境、类生产环境等。另外，应尽量避免统一的、集中式的服务管理机制，对具体的一个服务而言，应根据上下文，选择合适的语言、工具对其进行构建。
+
+
+
+#### 2、RPC
+
+RPC是远程过程调用（Remote Procedure Call）的缩写形式。SAP系统RPC调用的原理其实很简单，有一些类似于三层构架的C/S系统，第三方的客户程序通过接口调用SAP内部的标准或自定义函数，获得函数返回的数据进行处理后显示或打印。
+
+#### 3、[C语言编译过程详解](https://www.cnblogs.com/CarpenterLee/p/5994681.html)
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211117154613534.png" alt="image-20211117154613534" style="zoom:50%;" />
+
+或者https://www.cnblogs.com/mickole/articles/3659112.html
+
+1、编译
+
+```bash
+g++ -c main.cpp match_server/*.cpp
+```
+
+几个.cpp生成几个.o
+
+
+
+2、连接
+
+```bash
+g++ *.o -o main -lthrift
+```
+
+
+
+
+
+
+
+### 二、
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211117084735672.png" alt="image-20211117084735672" style="zoom:50%;" />
+
+thrift就是其中的有向边。
+
+服务器节点进程想调用另外一个服务器节点进程就要用到thrift了。
+
+
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211117144956166.png" alt="image-20211117144956166" style="zoom:50%;" />
+
+game节点（match的client端）、
+match_system节点（match的server端、savedata的client端）
+
+
+
+
+
+## 7、管道、环境变量与常用命令
+
+### 1.管道
+
+#### **概念**
+
+管道类似于文件重定向，==**可以将前一个命令的stdout重定向到下一个命令的stdin。**==
+
+**我的理解**
+
+> 这是一个链式编程。将一个工作分解成几个工作步骤完成，上一个命令的stdout 通过 | 传给下一个命令的stdin。这样以来就可以得到想要的结果。因此对于命令我们要知道它的stdin要什么，stdout输出什么
+
+也即：==将|前的命令的stdout           传给->     |后命令的stdin==
+
+命令1| 命令2
+
+---
+
+#### **要点**
+
+- 管道命令仅处理stdout，会忽略stderr。
+- ==**管道右边的命令必须能接受stdin**==。 若是不能接受，则也不能用管道了
+- 多个管道命令可以串联。
+
+---
+
+#### **与文件重定向的区别**
+
+- 文件重定向左边为命令，右边为文件。
+- 管道左右两边均为命令，左边有stdout，右边有stdin。
+
+---
+
+#### **举例**
+
+统计当前目录下所有python文件的总行数，其中find、xargs、wc等命令可以参考常用命令这一节内容。
+
+```bash
+find . -name '*.py' | xargs cat | wc -l
+```
+
+解释：
+
+```bash
+1、find /path/to/directory/ -name '*.py'   #搜索某个文件路径下的所有*.py文件
+
+2、xargs  # 将stdin中的数据用空格或回车分割成命令行参数传给命令，stdin->命令参数 。**也即把stdin的内容接到xargs后面的命令的后面!!!!**
+
+3、比如cat命令，它接受标准输入stdin就直接输出到stdout了，若接受命令行参数，则把文件的内容展示
+
+4、wc：统计行数、单词数、字节数。既可以从stdin中直接读入内容；也可以在命令行参数中传入文件名列表；
+ -l：统计行数
+ -w：统计单词数
+ -c：统计字节数
+ 
+5、标准输入 和 命令参数
+```
+
+---
+
+#### **例子1：**
+
+对于目录结构：<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211119152647536.png" alt="image-20211119152647536" style="zoom:67%;" />
+
+注意所有cpp的内容都一样，且为10行（包含空行），
+
+则：
+
+```bash
+find . -name "*.cpp" | xargs cat | wc -l  #结果是40
+```
+
+```bash
+find . -name "*.cpp" | cat | wc -l #结果是4
+```
+
+
+
+#### 例子2
+
+对于目录结构：<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211119152647536.png" alt="image-20211119152647536" style="zoom:67%;" />
+
+注意所有cpp的内容都一样，且为10行（包含空行），
+
+```bash
+find . -name '*.cpp' | wc -l #结果是4
+find . -name '*.cpp' | xargs wc -l #结果是10\n 10\n 10\n 10\n
+```
+
+结果如下所示：
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211119154204483.png" alt="image-20211119154204483" style="zoom:50%;" />
+
+知识点：wc：统计行数、单词数、字节数。既可以从stdin中直接读入内容；也可以在命令行参数中传入文件名列表
+
+
+
+
+
+
+
+
+
+### 2.环境变量
+
+#### **概念**
+
+Linux系统中会用很多环境变量来记录配置信息。
+
+环境变量类似于全局变量，可以被各个进程访问到。我们可以通过修改环境变量来方便地修改系统配置。
+
+配置存储到环境变量里：如HOME、PATH
+
+配置存储到文件里：cpuinfo存储在/proc/cpuinfo里
+
+---
+
+#### **查看**
+
+列出当前环境下的所有环境变量：
+
+```bash
+env  # 显示当前用户的变量
+set  # 显示当前shell的变量，包括当前用户的变量;
+export  # 显示当前导出成用户变量的shell变量
+```
+
+输出某个环境变量的值：
+
+```bash
+echo $PATH
+```
+
+---
+
+#### 修改
+
+环境变量的定义、修改、删除操作可以参考3. shell语法——变量这一节的内容。
+
+为了将对环境变量的修改应用到未来所有环境下，可以将修改命令放到~/.bashrc文件中。
+修改完~/.bashrc文件后，记得执行source ~/.bashrc，来将修改应用到当前的bash环境下。
+
+为何将修改命令放到~/.bashrc，就可以确保修改会影响未来所有的环境呢？
+
+- 每次启动bash，都会先执行~/.bashrc。
+- 每次ssh登陆远程服务器，都会启动一个bash命令行给我们。
+- 每次tmux新开一个pane，都会启动一个bash命令行给我们。
+- 所以未来所有新开的环境都会加载我们修改的内容。
+
+
+
+---
+
+#### 常见环境变量
+
+1. HOME：用户的家目录。
+2. PATH：可执行文件（命令）的存储路径。路径与路径之间用:分隔。当某个可执行文件同时出现在多个路径中时，会选择从左到右数第一个路径中的执行。下列所有存储路径的环境变量，均采用从左到右的优先顺序。
+3. LD_LIBRARY_PATH：用于指定动态链接库(.so文件)的路径，其内容是以冒号分隔的路径列表。
+4. C_INCLUDE_PATH：C语言的头文件路径，内容是以冒号分隔的路径列表。
+5. CPLUS_INCLUDE_PATH：CPP的头文件路径，内容是以冒号分隔的路径列表。
+6. PYTHONPATH：Python导入包的路径，内容是以冒号分隔的路径列表。
+7. JAVA_HOME：jdk的安装目录。
+8. CLASSPATH：存放Java导入类的路径，内容是以冒号分隔的路径列表。
+
+
+
+### 3.常用命令
+
+#### **系统状况**
+
+1. top：查看所有进程的信息（Linux的任务管理器）
+   - 打开后，输入M：按使用内存排序
+   - 打开后，输入P：按使用CPU排序
+   - 打开后，输入q：退出
+
+2. df -h：查看硬盘使用情况
+3. free -h：查看内存使用情况
+4. du -sh：查看当前目录占用的硬盘空间
+5. ps aux：查看所有进程
+6. kill -9 pid：杀死编号为pid的进程
+7. 传递某个具体的信号：kill -s SIGTERM pid
+8. netstat -nt：查看所有网络连接
+   w：列出当前登陆的用户
+9. ping www.baidu.com：检查是否连网
+
+
+
+#### 文件权限
+
+1. chmod：修改文件权限
+   - chmod +x xxx：给xxx添加可执行权限
+   - chmod -x xxx：去掉xxx的可执行权限
+   - chmod 777 xxx：将xxx的权限改成777
+   - chmod 777 xxx -R：递归修改整个文件夹的权限
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211120144124301.png" alt="image-20211120144124301" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+#### 文件检索
+
+1. **find** /path/to/directory/ -name '*.py'：搜索某个文件路径下的所有*.py文件
+2. **grep** xxx：从stdin中读入若干行数据，如果某行中包含xxx，则输出该行；否则忽略该行。
+3. **wc**：统计行数、单词数、字节数
+   - 既可以从**stdin**中直接读入内容；也可以在**命令行参数**中传入文件名列表；
+   - 不加参数，展示行数、单词数、字节数
+   - wc **-l**：统计行数
+   - wc **-w**：统计单词数
+   - wc **-c**：统计字节数
+   - 可以跟多个参数  例如 `tmp/*`
+   - **wc和grep都可以在命令行直接输入，然后命令行变成执行状态，可以输入字符、回车，然后Ctrl+D可以推出**
+4. **tree**：展示当前目录的文件结构
+   - tree /path/to/directory/：展示某个目录的文件结构
+   - tree -a：展示隐藏文件
+5. ==ag== xxx：搜索当前目录下的所有文件，检索xxx字符串
+6. cut：分割每行的内容
+   - 从stdin中读入多行数据
+   - -c ：以字符为单位进行分割。
+   - -d ：自定义分隔符，默认为制表符。
+   - -f ：与-d一起使用，指定显示哪个区域。
+   - 例子：
+     - echo $PATH | cut -d ':' -f 3,5：输出PATH用:分割后第3、5列数据
+     - echo $PATH | cut -d ':' -f 3-5：输出PATH用:分割后第3-5列数据
+     - echo $PATH | cut -c 3,5：输出PATH的第3、5个字符
+     - echo $PATH | cut -c 3-5：输出PATH的第3-5个字符
+     - <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211120165038691.png" alt="image-20211120165038691" style="zoom:50%;" />
+     - cut命令，从stdin读入多行数据，-d指定分隔符，-f选择其中的某一列
+7. sort：将每行内容按字典序排序
+   - 可以从stdin中读取多行数据
+   - 可以从命令行参数中读取文件名列表
+   - 配合find来用
+8. **xargs**：将stdin中的数据用空格或回车分割成命令行参数
+   - 因为有些命令不接受标准输入，而管道符之间的连接必须是stdout和stdin，也即后一个命令接受到的只能是前一个命令的stdout，并且放在stdin里，这时xargs就很关键了
+   - find . -name '*.py' | xargs cat | wc -l：统计当前目录下所有python文件的总行数
+   - find . -name '*.py' | xargs cat 将所有Python文件输出
+
+#### 查看文件内容
+
+1. more：浏览文件内容
+   - 回车：下一行
+   - 空格：下一页
+   - b：上一页
+   - q：退出
+
+2. less：与more类似，功能更全
+   - 回车：下一行
+   - y：上一行
+   - Page Down：下一页
+   - Page Up：上一页
+   - q：退出
+
+3. head -3 xxx：展示xxx的前3行内容，
+   - 同时支持从stdin读入内容
+   - `ps aux | head -3`  head可用于截取一部分内容
+
+
+
+4. tail -3 xxx：展示xxx末尾3行内容
+   - 同时支持从stdin读入内容
+
+
+
+---
+
+#### 用户相关
+
+history：展示当前用户的历史操作。内容存放在~/.bash_history中
+
+关闭bash后，才会把当前的最新的history写进.bash_history中
+
+
+
+
+
+#### 工具
+
+1. md5sum：计算md5哈希值
+   - 去网上下载东西时，会给一个哈希值。可以将任意长度的字符串，求一个哈希值。由字符串求哈希值，很简单，但是反过来几乎不可能。
+   - 可以从stdin读入内容
+   - 也可以在命令行参数中传入文件名列表；
+2. time command：统计command命令的执行时间
+3. ipython3：交互式python3环境。可以当做计算器，或者批量管理文件。
+   - ! echo "Hello World"：!表示执行shell脚本
+   - 加上！可以执行shell脚本
+4. watch -n 0.1 command：每0.1秒执行一次command命令
+   - 可以观察内存占用情况
+5. tar：压缩文件
+   - tar -zcvf xxx.tar.gz /path/to/file/*：压缩  不加\*应该也行。
+   - 加\*：   进压缩包是直接进到了里面， 不加\*：进压缩包时，是先显示了一个文件夹
+   - tar -zxvf xxx.tar.gz：解压缩
+6. diff xxx yyy：查找文件xxx与yyy的不同点
+
+
+
+#### 例子
+
+##### 例1
+
+找出tmp文件夹中cpp文件里，哪些地方出现了关键词"main"（注意没有标明出处，只是把所有出处的行给列举出来了，没有列举这一行属于哪一个文件）
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211120152734565.png" alt="image-20211120152734565" style="zoom:50%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211120152752736.png" alt="image-20211120152752736" style="zoom: 67%;" />
+
+##### 例2
+
+同上，只不过要列举出处
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211120153439060.png" alt="image-20211120153439060" style="zoom:50%;" />
+
+##### 例3
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211120154247785.png" alt="image-20211120154247785" style="zoom:50%;" />
+
+找tmp文件夹下，所有cpp文件的总行数
+
+找tmp文件夹下，所有py文件的总行数
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211120154306615.png" alt="image-20211120154306615" style="zoom:67%;" />
+
+
+
+#### 注意
+
+top 只能查看几个排名top的进程，看不全，一般我们会有三四百的进程
+
+ps aux 详细展示每一个进程，一般用来查某一个进程，百分之八十的情况下都是用来杀进程
+
+==`xargs + 命令` 就是将stdin变成参数放到了 xargs后面了==
+
+---
+
+[kill命令详解](https://linux.cn/article-2116-1.html)
+
+
+
+当你执行一个"kill"命令，你实际上发送了一个信号给系统，让它去终结不正常的应用。总共有60个你可以使用的信号，但是基本上你只需要知道SIGTERM(15)和SIGKILL(9)。
+
+你可以用这个命令看到所有信号的列表： `kill -l`
+
+- SIGTERM - 此信号请求一个进程停止运行。此信号是可以被忽略的。进程可以用一段时间来正常关闭，一个程序的正常关闭一般需要一段时间来保存进度并释放资源。换句话说，它不是强制停止。
+- SIGKILL - 此信号强制进程立刻停止运行。程序不能忽略此信号，而未保存的进度将会丢失。
+
+使用"kill"的语法是：
+
+```bash
+kill [信号或选项] PID(s)
+```
+
+默认信号（当没有指定的时候）是SIGTERM。当它不起作用时，你可以使用下面的命令来强制kill掉一个进程:
+
+```bash
+kill SIGKILL PID 或 kill -9 PID
+```
+
+这里"-9"代表着SIGKILL信号。
+
+如果你不知道应用的PID，仅需要运行这个命令： `ps aux`  
+
+也可以在同一时间kill多个进程。`kill -9 PID1 PID2 PID3`
+
+
+
+#### 拓展小知识
+
+密码的存储：数据库中一般不存用户的密码，而是存密码的哈希值（现在一般不用md5），这样的话，当用户登录时，输入的密码会先求一遍哈希值然后与数据库的哈希值进行比较，这样的话我们就不用存密码了，这样就保护了用户的隐私，而且防止了密码的泄露。
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211120212713166.png" alt="image-20211120212713166" style="zoom:50%;" />
+
+
+
+假如我们现在是考官（出卷者），我们通过哈希的方法就能完成：
+
+1. 不让学生看答案
+2. 同时可评测
+
+
+
+
+
+一般命令行参数里都是文件名，因此find命令（会返回文件名参数）管道的下一项，一般要接xargs
 
