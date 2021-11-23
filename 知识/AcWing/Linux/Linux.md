@@ -2481,3 +2481,148 @@ kill SIGKILL PID 或 kill -9 PID
 
 一般命令行参数里都是文件名，因此find命令（会返回文件名参数）管道的下一项，一般要接xargs
 
+
+
+
+
+## 8、租云服务器及配docker环境
+
+
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211122201955278.png" alt="image-20211122201955278" style="zoom: 33%;" />
+
+我们租到的服务器可以分为两大类毛坯服务器和提供一些服务的服务器（比如cdn、mysqll、redis，直播等等）
+
+一般来说，毛坯服务器上跑框架、thrift。可定制化强
+
+而提供服务的服务器，就不能自己做修改了，也即功能固定，提供服务的方式有两大类：1.socket：IP+port(比如数据库)、  2.http。
+
+关系：中心服务器是毛坯服务器（比如上面跑Django）、然后调用其他提供服务的服务器。
+
+
+
+1核2GB的一般学生<100，非学生得小1000元。服务器可以动态扩容，因此可以买一个小的
+
+
+
+docker可以在服务器上开一堆虚拟的小服务器，在房子的内部再建小房子，docker很大的优势是迁移。 将在阿里云搭的服务器，可以很方便的迁移到华为云，避免踩坑。acwing提供配置好环境的docker镜像，用docker可以省掉配环境的步骤
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211122205324219.png" alt="image-20211122205324219" style="zoom: 33%;" />
+
+
+
+怎样进到docker容器，两种方式：1、进行到运行docker毛坯服务器上，通过docker自带的命令attach，进入到docker。2、可以把docker当做一个新的独立的linux环境，可以配置ssh登录，可以在其他地方直接ssh登录到docker容器里
+
+
+
+
+
+1、<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211122205724937.png" alt="image-20211122205724937" style="zoom:50%;" />
+
+2、<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211122205908815.png" alt="image-20211122205908815" style="zoom:50%;" />
+
+
+
+docker怎么迁移出来？两行命令：1、把容器生成一个镜像 2、把镜像打包成一个文件。
+
+
+
+### 1.租云服务器以及配环境
+
+**从零开始**：（以腾讯云为例）
+
+#### 一、进入官网
+
+进入官网：https://cloud.tencent.com/ ，然后点击控制台，“云产品”-“云服务器” （阿里云网站叫ECS弹性服务器）-“实例”-“创建实例” 这样就进入到了服务器配置界面，以上可以通过官网的一些双十一活动进入，注意选择云服务器，而不是轻量化应用服务器。
+
+我购买的时候，参考了这篇[文章](https://www.acwing.com/blog/content/11826/)
+
+#### 二、购买云服务器
+
+1、配置的选择问题:首先记得选择“自定义购买”，它相较于“一键购买”来说可定制化更强。
+2、“付费方式”一般选择包年包月、“地域和可用区”不用太纠结，型号选择“一核2G”。
+3、镜像选择“公共镜像”、“ubuntu 20.04 LTS”。公网ip一定要勾选。
+4、宽带计费模式选择“按使用量”然后把带宽峰值拉到最大200M。
+5、“安全组”如果没有要去新建，腾讯云有默认安全组，它的作用是控制服务器的哪些端口可以被访问 HTTP80 HTTPS443 SSH22。
+6、登录名和密码需要注意的是阿里云华为云给的都是root用户，而腾讯云给的是Ubuntu用户，但它具有sudo权限
+7、大部分设置都选择默认。
+
+购买完成！
+
+
+
+#### 三、登录云服务器并完成配置
+
+1. 第一次登录：`ssh root@公网ip地址` ，然后输入密码。 
+2. 查看配置：`free -h`查看内存，`/proc/cpuinfo`查看cpu的配置信息。
+3. 一个建议：root用户不推荐使用，因为它的权限太大，推荐创建一个非根的用户，给它分配一个sudo权限，这样会更安全。
+4. 添加用户：`adduser wangchen`回车，输入两次密码，其他信息可以不填，Y，
+5. 给新建的用户分配sudo权限：`usermod -aG sudo wangchen`
+6. 退回AcTerminal：Ctrl + D
+7. 配置ACterminal中的acs免密登录我的云服务器：1、先配置别名：在~/.ssh/config中,输入以下
+
+```bash
+Host myserver1
+	HostName 82.156.36.251
+	User wangchen
+```
+
+​	2、配置免密登录：如果本地服务器中没有生产ssh公钥秘钥的话要先生成`ssh-keygen`，在`~/.ssh/config`文件夹下。 通过`ssh-copy-id myserver1`,输入密码，完成！
+
+8. 我们直接`ssh myserver1`就可以登录到服务器了！以上就完成了服务器用户的添加，密码登录
+
+9. 下面开始进一步改造：
+
+10. 先`sudo apt-get update`,输入密码
+
+11. 安装tmux: `sudo apt-get install tmux`, Y ,完成，此时的tmux是原始tmux，没有经过改造。
+
+12. 改造tmux、vim、bash：先Ctrl+D回到AcTreminal， `scp .bashrc .vimrc .tmux.conf myserver1:`。回车，这样就把tmux、vim、bash的配置文件传到了云端服务器。这样以后就完成了配置。
+
+13. 打开tmux，以后的工作都在tmux中完成，防止进度丢失。
+
+14. 装docker：[网址](https://docs.docker.com/engine/install/ubuntu/)，依次复制粘贴上面的命令，一字不差的执行
+
+    ```bash
+    sudo apt-get update
+    
+    sudo apt-get install \
+        ca-certificates \
+        curl \
+        gnupg \
+        lsb-release
+        
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      
+    sudo apt-get update
+     sudo apt-get install docker-ce docker-ce-cli containerd.io
+    ```
+
+15. 通过`docker --version`，查看docker版本，完成安装！
+
+16. 其他工具的安装：`sudo apt-get install tree` 、 `sudo apt-get install python3` 、`sudo apt-get install ipython3`
+
+
+
+其他：重装操作系统就是更换操作系统
+
+养成好习惯，所有工作都在tmux里进行，防止意外关闭终端后，工作进度丢失
+
+
+
+
+
+
+
+### 2、doker教程
+
+配完docker之后，发现docker很多命令都要加上sudo权限才能运行，怎样才能避免每次使用docker命令都要sudo权限呢？ 把当前的用户添加到docker用户组里就行了。
+
+
+
+
+
