@@ -1,6 +1,6 @@
 传统资源型社会->知识密集型社会
 
-
+待学习：多线程
 
 # Linux
 
@@ -140,13 +140,13 @@ cat 文件名、 more 文件名  按q退出 按空格一帧 回车一行
 
 **vim**的配置文件是 `.vimrc`  放在云端的~家目录下。内容在配置文件夹里。
 
-**bash**的配置文件：.bashrc 放在云端的~家目录下。里面有PATH等内容，在启动bash时会自动执行该文件。
+**bash**的配置文件：.bashrc 放在云端的~家目录下。里面有PATH等内容，在启动bash时会自动执行该文件。修改后记得`source`一下，并重启bash。
 
 **bash的历史命令**文件是` .bash_history` 在云端的~目录下。`history`命令执行的是当前的1000条命令，退出bash后，才会把最新的命令更新到`.bash_histroy`中
 
 **git**的配置文件是`.gitconfig`,在云端的~目录下。存的是username、email、alias快捷键等
 
-**ssh**的配置文件夹在`.ssh`目录下, 里面的config文件存的是服务器的别名以及其对应的HostName和User。以及第一次访问别的服务器时所保存的信息，在known_hosts里。id_rsa以及.pub存的ssh-keygen生成的公钥和秘钥
+**ssh**的配置文件夹在`.ssh`目录下, 里面的config文件存的是服务器的别名以及其对应的HostName和User。第一次访问别的服务器时所保存的信息，在known_hosts里。id_rsa以及.pub存的ssh-keygen生成的公钥和秘钥
 
 
 
@@ -622,6 +622,16 @@ y总推荐做法：
 		
 注意：Linux系统自带的剪切板 和 Vim自带的剪切板 不一样 
 ```
+
+使用vim时，会因为不小心按了**Ctrl + s**后，会发现不能输入任何字符，类似死机；
+
+这并不是Linux死机，或者vim卡住，而只是按了Ctrl + s后，vim停止向终端输出。
+
+解决方法：
+
+退出这种状态，按下**Ctrl + q** 
+
+
 
 
 
@@ -1619,9 +1629,9 @@ scp -P 22 source1 source2 destination
 ### 一个毛坯服务器怎么改造：
 
 1. 下载tmux，下载vim
-2. 在terminal里，~/.ssh/文件夹下的config文件添加自己的服务器ip以及用户名
-3. 通过ssh-keygen命令生成公钥和私钥，把公钥复制到服务器中（可以直接复制，也可以使用命令）
-4. 然后就可以直接登录服务区了。
+2. 在terminal里，~/.ssh/文件夹下的config文件添加自己的服务器ip以及用户名密码 （起别名）
+3. 通过ssh-keygen命令生成公钥和私钥，把公钥复制到服务器中（可以直接复制，也可以使用命令）（免密）
+4. 然后就可以免密别名直接登录服务区了。
 5. 把y总的旷世配置文件scp进自己的服务器里，也即.vimrc和.tmux.conf
 
 
@@ -1696,10 +1706,10 @@ ssh myserver mkdir "homework/lesson_4/homework_4/\"$1\"" #等价
 
 ### 一、基本概念
 
-- 工作区：仓库的目录。工作区是独立于各个分支的。  在本地看git的时候，其实就是一个文件夹，工作区就是当前的工作目录、工作文件夹。不管在哪一个分支，工作区都是同一个，不要以为每一个分支都有一个工作区。
-- 暂存区：数据暂时存放的区域，类似于工作区写入版本库前的缓存区。暂存区是独立于各个分支的。是版本库和工作区的桥梁。每一次将工作区存到版本库的某一节点时，不会直接存，会先存在暂存区里。然后把暂存区的内容放到版本库里，
-- 版本库：存放所有已经提交到本地仓库的代码版本。将所有的版本用一颗树的形式存下来。
-- 版本结构：树结构，树中每个节点代表一个代码版本。
+- **工作区**：仓库的目录。工作区是独立于各个分支的。  在本地看git的时候，其实就是一个文件夹，工作区就是当前的工作目录、工作文件夹。不管在哪一个分支，工作区都是同一个，不要以为每一个分支都有一个工作区。
+- **暂存区**：数据暂时存放的区域，类似于工作区写入版本库前的缓存区。暂存区是独立于各个分支的。是版本库和工作区的桥梁。每一次将工作区存到版本库的某一节点时，不会直接存，会先存在暂存区里。然后把暂存区的内容放到版本库里，
+- **版本库**：存放所有已经提交到本地仓库的代码版本。将所有的版本用一颗树的形式存下来。
+- **版本结构**：树结构，树中每个节点代表一个代码版本。
 
 
 
@@ -1718,7 +1728,7 @@ git diff <branch1>..<branch2> # 在两个分支之间比较
 git diff --staged # 比较暂存区和版本库差异
 ```
 
-
+https://blog.csdn.net/wq6ylg08/article/details/88798254
 
 #### 2、暂存区管理
 
@@ -1794,7 +1804,7 @@ git log打印从空节点到当前节点的路径（HEAD指向的点)，从下�
 
 分支是可以从任意结点出发创建一个新的分支，注意创建分支是不会创建节点的，commit才会产生新的节点。
 
-**分支跟暂存区是独立的，暂存区跟分支没有任何关系，不管在master分支还是在dev分支都共用一个暂存区，commit的时候会看当前在哪一个分支（HEAD所指)，然后将暂存区的内容加到后面，不管在哪一个分支都共用一个暂存区和工作区**
+**分支跟暂存区是独立的，暂存区跟分支没有任何关系，不管在master分支还是在dev分支都共用一个暂存区，暂存区只有一个，commit的时候会看当前在哪一个分支（HEAD所指)，然后将暂存区的内容加到后面，不管在哪一个分支都共用一个暂存区和工作区**
 
 
 
@@ -1990,11 +2000,7 @@ git stash list	#查看栈中所有元素
 
 使用git时，心里要有两个图：1、版本库（树）和HEAD指针          2、暂存区
 
-<img src="C:\Users\95266\Desktop\new.png" alt="new" style="zoom:60%;" />
-
-
-
-
+<img src="C:\Users\95266\OneDrive\重要学习资料\知识\AcWing\Linux\图解\git关系图.png" alt="git关系图" style="zoom: 50%;" />
 
 #### 2、clone
 
@@ -2018,9 +2024,11 @@ Linux/Mac 系统 在 ~/.ssh 下，win系统在 /c/Documents and Settings/usernam
 
 
 
-## 6、thrift（未看）
+## 6、thrift
 
 ### 一、预备知识
+
+多线程要学学
 
 #### 1、软件系统架构-微服务
 
@@ -2034,7 +2042,7 @@ Linux/Mac 系统 在 ~/.ssh 下，win系统在 /c/Documents and Settings/usernam
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116223227194.png" alt="image-20211116223227194" style="zoom: 67%;" />
 
-<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116223311461.png" alt="image-20211116223311461" style="zoom:50%;" />
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116223311461.png" alt="image-20211116223311461" style="zoom:60%;" />
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211116223540590.png" alt="image-20211116223540590" style="zoom:50%;" />
 
@@ -2052,9 +2060,14 @@ RPC是远程过程调用（Remote Procedure Call）的缩写形式。SAP系统RP
 
 或者https://www.cnblogs.com/mickole/articles/3659112.html
 
+
+
+y总的教程：
+
 1、编译
 
 ```bash
+#g++ -c a.cpp b.cpp c.cpp d.cpp ...
 g++ -c main.cpp match_server/*.cpp
 ```
 
@@ -2065,6 +2078,7 @@ g++ -c main.cpp match_server/*.cpp
 2、连接
 
 ```bash
+#g++ a.o b.o c.o d.o -o main -lthrift            main是可执行程序的名字
 g++ *.o -o main -lthrift
 ```
 
@@ -2074,7 +2088,7 @@ g++ *.o -o main -lthrift
 
 
 
-### 二、
+### 二、课程内容
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211117084735672.png" alt="image-20211117084735672" style="zoom:50%;" />
 
@@ -2087,7 +2101,928 @@ thrift就是其中的有向边。
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211117144956166.png" alt="image-20211117144956166" style="zoom:50%;" />
 
 game节点（match的client端）、
-match_system节点（match的server端、savedata的client端）
+match_system节点（match的server端、save的client端）
+
+game/match_system端分别代表两个服务器
+
+**目录结构:**
+
+首先创建多个文件夹代表多个节点服务器，如game、match_system、thrift
+
+然后每个节点服务器文件夹先创建一个src文件夹，src下存源码，我们可以再创一些其他文件夹比如imgs存图片啥的。
+
+在src目录下，首先会有多个可执行文件（好像不固定，一个服务可以开一个线程），以及其源码文件，然后再下设几个文件夹作为服务的server端或者client端
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211202123216495.png" alt="image-20211202123216495" style="zoom: 67%;" />
+
+
+
+
+
+
+
+**条件变量**配合**锁**更方便实现**消息队列**
+
+条件变量其实是对锁做了一个封装
+
+加锁的方式：`unique_lock<mutex> lck(message_queue.m)`  这样做的好处，不需要显式解锁，当变量被注销时，也即函数执行完的时候，变量消失会自动解锁。
+
+remote-h 和skeleton都是服务端的样例代码，在client端要把它给删了，因为C++只能有一个main函数，python的Client端可以不删remote-h
+
+
+
+
+
+
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211128185125121.png" alt="image-20211128185125121" style="zoom: 33%;" />
+
+完成了match的server端(C++ 多线程)、client端(python)、
+save的client端(C++)   save的server端是y总给我们写好了。
+
+
+
+#### thrift小总结
+
+可见client端比较简单，只管不断定义封装对象，然后得到client对象然后调用即可。
+
+1. thrift可以让我们在本地的服务器中的函数中，调用另一个服务器上另一种语言写的函数，服务端监听，Client端调用，因此定义完thrift接口后生成两份代码，服务端要先启动服务。
+2. 为了完成上述的RPC过程，我们需要.thrift文件要定义接口，声明这个调用的过程中要用到的一些**参数**信息和调用的**函数**。然后用接口可以自动生成两份client和sever端代码。
+3.  **服务端代码用生成的，client端代码要参照tutorial**
+4. 关于.thrift文件中的namespace可以这样理解：由于在客户端和服务端我们分别需要调用和实现 交互函数以及部分变量，这些内容都在namespace里，可以更**清晰**。这样做以后，我们在client端或者服务端需要调用时就需要在最前面加上using namespace match_service/save_service  。Python好像没有namespace一说。因此我猜想：如果我们需要用java和C++分别作为Client和服务端的语言的话，那么thrift就需要声明java和cpp两个命名空间了。经验证我猜对了，在thrift里分别定义命名空间，然后用thrift -r --gen cpp 和java分别生成两分代码，
+   <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211201153508889.png" alt="image-20211201153508889" style="zoom:50%;" />  <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211201153603595.png" alt="image-20211201153603595" style="zoom:50%;" />
+   可以看出，java对namespace是用package， cpp是用namespace
+5. 在client端调用代码的步骤，一般都是封装一堆对象，然后最后生成一个client对象，如下所示。在client端是通过**client对象**调用服务器端代码的。在服务器端是通过**server对象**，调用**server.serve()**来监听的
+
+python的client端
+
+```python
+ transport = TSocket.TSocket('localhost', 9090)
+ # Buffering is critical. Raw sockets are very slow
+ transport = TTransport.TBufferedTransport(transport)
+ # Wrap in a protocol
+ protocol = TBinaryProtocol.TBinaryProtocol(transport)
+ # Create a client to use the protocol encoder
+ client = Match.Client(protocol)
+ # Connect!
+ transport.open()
+	
+ client.函数名//这里可以调用接口中的函数   
+    
+ # Close!
+ transport.close()
+```
+
+C++的client端
+
+```C++
+		   std::shared_ptr<TTransport> socket(new TSocket("123.57.47.211", 9090));
+            std::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
+            std::shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
+            SaveClient client(protocol);
+
+            try {
+                transport->open();
+
+                client.save_data("acs_2101", "bbf8580b", a, b);//调用
+
+                transport->close();
+            } catch (TException& tx) {
+                cout << "ERROR: " << tx.what() << endl;
+            }
+```
+
+C++ Server端
+
+```C++
+// This autogenerated skeleton file illustrates how to build a server.
+// You should copy it to another filename to avoid overwriting it.
+#include "match_server/Match.h"//注意修改       thrift里的服务名是Match
+#include <thrift/protocol/TBinaryProtocol.h>
+#include <thrift/server/TSimpleServer.h>
+#include <thrift/transport/TServerSocket.h>
+#include <thrift/transport/TBufferTransports.h>
+
+using namespace ::apache::thrift;
+using namespace ::apache::thrift::protocol;
+using namespace ::apache::thrift::transport;
+using namespace ::apache::thrift::server;
+
+using namespace  ::match_service;//thrift里的命名空间
+
+class MatchHandler : virtual public MatchIf {
+    public:
+        MatchHandler() {
+            // Your initialization goes here
+        }
+		//生产者
+        int32_t add_user(const User& user, const std::string& info) {
+            // Your implementation goes here
+            printf("add_user\n");
+            unique_lock<mutex> lck(message_queue.m);//不需要显式解锁，因为当变量被注销的时候，自动解锁
+            message_queue.q.push({user, "add"});
+            message_queue.cv.notify_all();
+            return 0;
+        }
+		//生产者
+        int32_t remove_user(const User& user, const std::string& info) {
+            // Your implementation goes here
+            printf("remove_user\n");
+            unique_lock<mutex> lck(message_queue.m);
+            message_queue.q.push({user, "remove"});
+            message_queue.cv.notify_all();
+            return 0;
+        }
+
+};
+int main(int argc, char **argv) {
+    int port = 9090;
+    ::std::shared_ptr<MatchHandler> handler(new MatchHandler());
+    ::std::shared_ptr<TProcessor> processor(new MatchProcessor(handler));
+    ::std::shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
+    ::std::shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
+    ::std::shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
+    server.serve(); //注意此处开的线程←
+    return 0;
+}
+```
+
+
+
+6. server.serve() 就是提供了client的调用**服务**，一直运行，处于**监听**状态。
+7. 更正一个错误的思路：我原本认为服务器和客户端都是单独执行一个程序，但现在要有个监听、调用的思想了；**thrift存在的目的不只是让我们调用一个本地服务器不存在的方法，如果这样的话我们可以直接把不在本地的代码复制到本地，而是thrift的目的是让我们调用云端服务器一个其他语言写的函数，这个函数将在云端服务器上运行，本地能得到返回值。相当于云端提供给我们服务，我们提需求给云端，核心思想是==服务==**。**服务端程序应始终处于运行状态（线程开启），然后监听Client端发出的请求，然后处理并响应返回值**。
+
+
+
+以前不懂的一个问题：
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211202123439574.png" alt="image-20211202123439574" style="zoom:50%;" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+本节两个知识点：多线程、thrift调用
+
+#### 步骤：
+
+1. 创建本地仓库(git init)、云端仓库并建立对应关系，初始化README 并push
+
+   - 注：本地仓库的目录写法：以文件夹名作为服务器名，下面定义一个src目录
+   - 定义一个thrift文件夹，里面定义thrift接口文件
+     <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130140750292.png" alt="image-20211130140750292" style="zoom: 67%;" />
+
+2. 在thrift官网仿照写法，写一个.thrift文件，这是一个定义服务器交互的接口的文件，定义的是**参数和方法**，下面是官网里给的步骤教学，我们可以点击**tutorial.thrift**样例来学习写法。
+   <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130102641409.png" alt="image-20211130102641409" style="zoom: 50%;" />
+   下面是我写的match.thrift文件,定义了相关的接口
+
+   ```C
+   namespace cpp match_service //声明命名空间，java的话会生成package
+   
+   struct User{
+       1: i32 id,
+       2: string name,
+       3: i32 score,
+   }
+   
+   service Match{ //服务大写
+       i32 add_user(1: User user, 2: string info),
+   
+       i32 remove_user(1: User user, 2: string info),
+   }
+   ```
+
+   
+
+3. 用这个thrift文件先生产服务器端cpp代码，命令如下`thrift -r --gen cpp ../../thrift/match.thrift`,然后生成了如下的目录结构，生成了一个gen-cpp文件夹
+   <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130103024658.png" alt="image-20211130103024658" style="zoom: 80%;" />
+
+4. 然后把Match_server.skeleton.cpp 移动到src目录下并命名为main.cpp，并把gen-cpp改名为match_server
+
+   <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130105419396.png" alt="image-20211130105419396" style="zoom: 67%;" />
+
+5. 下面开始改服务端代码main.cpp。先在add/remove_user的地方加上加上**return 0**; 然后把**include**的路径改一下，因为我们改了main.cpp的位置（加上match_server），然后include iostream ，using namespace std 在主函数中输**出一句话**，其他的都暂且不改。
+
+6. 两个过程：**编译、链接**。我们先编译cpp文件，`g++ -c main.cpp match_Server/*.cpp`，然后在当前目录下就会生成一堆.o文件，（有多少.cpp生成多少.o ，注意.h文件不用编译）。然后我们再链接`g++ *.o -o main -lthrift `。解释：-lthrift是加上thrift的动态链接库， mian是生成的可执行程序的名字。
+
+7. 运行main程序。
+   <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130111354521.png" alt="image-20211130111354521" style="zoom:67%;" />
+   这样我们就完成了一个最基本的版本， commit 并push 一下  -m " add match_server in match_system "
+
+8. 下面开始在game文件夹写match_client端，先创建一个src，然后我们使用`thrift -r --gen py ../../thrift/match.thrift`，我们要删除服务端的代码，它对于我们没什么意义，然后手写client端。
+   <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130113004458.png" alt="image-20211130113004458" style="zoom:50%;" />
+
+9. 做一个改名，把gen-py改为match_client。注意Match_remote是服务端代码，它是用Python实现的服务端代码，在这里我们要的是Match的client端，因此没啥用，建议直接删掉。因此我们不能像写C++服务端那样，直接修改skeleton文件就行了，我们这里需要自己重新建个Python文件写，打开**官网 - tutorial - python**中有教程。
+   <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130113645628.png" alt="image-20211130113645628" style="zoom: 67%;" />
+
+10. <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130113842222.png" alt="image-20211130113842222" style="zoom: 33%;" />
+    直接复制过来代码，在src目录下，创建个client.py文件,并在原始的文件做一下的修改
+
+    ```python
+    import sys
+    import glob
+    sys.path.append('gen-py')
+    sys.path.insert(0, glob.glob('../../lib/py/build/lib*')[0]) #前4行是将当前路径加到Python的环境变量里，因此没什么用，我们全删了
+    
+    from tutorial import Calculator #改成 from match_client.match import Match
+    from tutorial.ttypes import InvalidOperation, Operation, Work#改成 from match_client.match.ttypes import User
+    
+    from thrift import Thrift
+    from thrift.transport import TSocket
+    from thrift.transport import TTransport
+    from thrift.protocol import TBinaryProtocol
+    
+    
+    def main():
+        # Make socket
+        transport = TSocket.TSocket('localhost', 9090)
+        # Buffering is critical. Raw sockets are very slow
+        transport = TTransport.TBufferedTransport(transport)
+        # Wrap in a protocol
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        # Create a client to use the protocol encoder
+        client = Calculator.Client(protocol)  # 注意把此处的Calculator改成Match
+        # Connect!
+        transport.open()
+    #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓以下是教程代码全部删掉
+        client.ping()
+        print('ping()')
+        sum_ = client.add(1, 1)
+        print('1+1=%d' % sum_)
+        work = Work()
+        work.op = Operation.DIVIDE
+        work.num1 = 1
+        work.num2 = 0
+        try:
+            quotient = client.calculate(1, work)
+            print('Whoa? You know how to divide by zero?')
+            print('FYI the answer is %d' % quotient)
+        except InvalidOperation as e:
+            print('InvalidOperation: %r' % e)
+        work.op = Operation.SUBTRACT
+        work.num1 = 15
+        work.num2 = 10
+        diff = client.calculate(1, work)
+        print('15-10=%d' % diff)
+        log = client.getStruct(1)
+        print('Check log: %s' % log.value)
+    #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑以上是教程代码全部删掉
+        # Close!
+        transport.close()
+    
+        
+    #加上↓ 这是好习惯
+    if __name__ == "__main__"
+    	main()
+    ```
+
+    以下是第一个版本！
+
+    ```python
+    from match_client.match import Match
+    from match_client.match.ttypes import User
+    from thrift import Thrift
+    from thrift.transport import TSocket
+    from thrift.transport import TTransport
+    from thrift.protocol import TBinaryProtocol
+    
+    
+    def main():
+        # Make socket
+        transport = TSocket.TSocket('localhost', 9090)
+        # Buffering is critical. Raw sockets are very slow
+        transport = TTransport.TBufferedTransport(transport)
+        # Wrap in a protocol
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        # Create a client to use the protocol encoder
+        client = Match.Client(protocol)
+    
+        # Connect!
+        transport.open()
+        user = User(1, 'wc', 1500)
+        client.add_user(user, "")
+        # Close!
+        transport.close()
+    
+    if __name__ == "__main__":
+        main()
+    ```
+    
+    做到这步时，我们可以用git保存一下，注意 `git add . `是将当前文件下的修改添加到暂存区。和以前一样，我们别把.o .swp .pyc 、可执行文件 ， 这些中间文件加进去。
+
+    再完善一下client端,
+
+    ```python
+    from match_client.match import Match
+    from match_client.match.ttypes import User
+    from thrift import Thrift
+    from thrift.transport import TSocket
+    from thrift.transport import TTransport
+    from thrift.protocol import TBinaryProtocol
+    
+    from sys import stdin
+    
+    def operate(op, user_id, username, score):
+        # Make socket
+        transport = TSocket.TSocket('localhost', 9090)
+        # Buffering is critical. Raw sockets are very slow
+        transport = TTransport.TBufferedTransport(transport)
+        # Wrap in a protocol
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        # Create a client to use the protocol encoder
+        client = Match.Client(protocol)
+    
+        # Connect!
+        transport.open()
+    
+        user = User(user_id, username, score)
+        if op == "add":
+            client.add_user(user, "")
+        elif op == "remove":
+            client.remove_user(user, "")
+    
+        # Close!
+        transport.close()
+    
+    
+    def main():
+        for line in stdin:
+            op, user_id, username, score = line.split(' ')
+            operate(op, int(user_id), username, int(score))
+    
+    
+    if __name__ == "__main__":
+        main()
+    ```
+    
+    这是match_client的最终版，我们commit 一下 -m"finsh match_client.py in game"
+    
+11. 下面开始完善match_server:
+    涉及到了多线程：1、读用户   2、匹配
+    **消费者：consume_task**
+    **生产者：add/remove_user**
+    pool只是辅助进行match操作
+    
+    开线程的方式：①先引入头文件`include<thread>;` ②然后写一个带有死循环(也即while ture)的函数③然后在主函数中开线程`thread matching_thread(consume_task);`
+    
+    
+    
+    自己实现一个消息队列：用条件变量和锁来实现
+    
+12. 定义：<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130204932923.png" alt="image-20211130204932923" style="zoom:50%;" />
+
+
+
+y总的模型↓：
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130211745762.png" alt="image-20211130211745762" style="zoom: 40%;" />
+
+**由分析可得：**
+生产者-生产者之间 、 生产者-消费者、消费者-消费者 对缓冲区（消息队列）的访问是互斥的，因此需要互斥信号量mutex来实现，C++就是用`unique_lock<mutex> lck(message_queue.m)`来获取锁，用lck.unlock()来归还锁，当然也可以不显式使用unlock，因为lck变量被注销时，自动解锁。 
+
+生产者与消费者之间的同步操作怎么实现呢？ 也即可用资源为0时，消费者自己阻塞自己。可用资源大于1时，生产者唤醒消费者。可用`message_queue.cv.wait(lck)` 阻塞，用`message_queue.cv.notify_all()`来唤醒。上图是模型，不同的是图中直接使用了PV操作，包含了唤醒阻塞操作。   wait（）小括号中为什么要有参数呢？ 我猜是为了释放lck锁。  
+
+
+
+当加了线程的操作是时候，注意连接的时候要用`g++ -o *.o main -lthrift -pthread` 加上线程的连接库
+
+
+
+以下为version：2.0版本，我们到现在已经完成了match_client端，match_server的一个傻瓜版
+
+```C++
+// This autogenerated skeleton file illustrates how to build a server.
+// You should copy it to another filename to avoid overwriting it.
+
+#include "match_server/Match.h"//注意修改       thrift里的服务名是Match
+#include <thrift/protocol/TBinaryProtocol.h>
+#include <thrift/server/TSimpleServer.h>
+#include <thrift/transport/TServerSocket.h>
+#include <thrift/transport/TBufferTransports.h>
+
+#include<iostream>
+#include<thread>
+#include<mutex>
+#include<condition_variable>
+#include<queue>
+#include<vector>
+
+using namespace ::apache::thrift;
+using namespace ::apache::thrift::protocol;
+using namespace ::apache::thrift::transport;
+using namespace ::apache::thrift::server;
+
+using namespace  ::match_service;//thrift里的命名空间
+using namespace std;
+
+struct Task
+{
+    User user;
+    string type;
+};
+
+//消息队列
+struct MessageQueue
+{
+    queue<Task> q;
+    mutex m;    //互斥锁  互斥访问queue
+    condition_variable cv; //条件变量   用于唤醒等待
+}message_queue;
+
+class Pool
+{
+    public:
+        //保存的是用户id
+        void save_result(int a, int b)
+        {
+            printf("Match result %d %d\n", a, b);
+        }
+
+        void match()//傻瓜版
+        {
+            while(users.size() > 1)
+            {
+                auto a = users[0];
+                auto b = users[1];
+                users.erase(users.begin());
+                users.erase(users.begin());
+                save_result(a.id, b.id);
+            }
+        }
+        void add(User user)
+        {
+            users.push_back(user);
+        }
+
+        void remove(User user)
+        {
+            for(uint32_t i = 0; i < users.size(); i++)
+                if(users[i].id == user.id)
+                {
+                    users.erase(users.begin() + i);
+                    break;
+                }
+        }
+    private:
+        vector<User> users;
+}pool;
+
+class MatchHandler : virtual public MatchIf {
+    public:
+        MatchHandler() {
+            // Your initialization goes here
+        }
+		//生产者
+        int32_t add_user(const User& user, const std::string& info) {
+            // Your implementation goes here
+            printf("add_user\n");
+            unique_lock<mutex> lck(message_queue.m);//不需要显式解锁，因为当变量被注销的时候，自动解锁
+            message_queue.q.push({user, "add"});
+            message_queue.cv.notify_all();
+            return 0;
+        }
+		//生产者
+        int32_t remove_user(const User& user, const std::string& info) {
+            // Your implementation goes here
+            printf("remove_user\n");
+            unique_lock<mutex> lck(message_queue.m);
+            message_queue.q.push({user, "remove"});
+            message_queue.cv.notify_all();
+            return 0;
+        }
+
+};
+
+//消费者
+void consume_task()
+{
+    while(true)
+    {
+        unique_lock<mutex> lck(message_queue.m);
+        if(message_queue.q.empty())
+        {
+            message_queue.cv.wait(lck);
+        }
+        else
+        {
+            auto task = message_queue.q.front();
+            message_queue.q.pop();
+            lck.unlock();//尽早及时归还 因为下面的命令不涉及临界区了
+            //do tasks
+            if(task.type == "add") pool.add(task.user);
+            else if (task.type == "remove") pool.remove(task.user);
+
+            pool.match();
+        }
+    }
+}
+
+
+
+int main(int argc, char **argv) {
+    int port = 9090;
+    ::std::shared_ptr<MatchHandler> handler(new MatchHandler());
+    ::std::shared_ptr<TProcessor> processor(new MatchProcessor(handler));
+    ::std::shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
+    ::std::shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
+    ::std::shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
+
+    TSimpleServer server(processor, serverTransport, transportFactory, protocolFactory);
+
+    cout << "Start Match Server" << endl;
+
+    thread matching_thread(consume_task);
+
+    server.serve();
+    return 0;
+}
+```
+
+13. 下面开始实现：<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211201101359806.png" alt="image-20211201101359806" style="zoom: 67%;" />
+    sava_data服务的client端，.thrift接口和server端实现y总已经完成了。 名字是sava.thrift 。namespace是 sava_service, 服务是Save
+
+14. 把y总的save.thrift放到thrift文件夹下，然后再match_system/src下执行`thrift -r --gen cpp ../../thrift/save.thrift` 在src下会生成gen-cpp文件夹，改名为save_client 。<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211201104819719.png" alt="image-20211201104819719" style="zoom:50%;" />
+    注意的是 这个skeleton文件要删掉，因为它是服务端代码，我们这里要做的是save的client端因此不需要，要删掉，C++一个项目里只能有一个main函数，Python就不用删。 也即这里需要把save的client端代码（C++实现）引到上面写的main函数里。
+
+15. 进入C++tutorial，把client端代码有技巧地抄过来：1、先看标准库头文件少了哪些，给补上去<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211201110441325.png" alt="image-20211201110441325" style="zoom:50%;" />
+    2、自己的头文件引入，把下图的框内内容，根据下图的目录结构改一下<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211201110502523.png" alt="image-20211201110502523" style="zoom:50%;" /><img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211201110635976.png" alt="image-20211201110635976" style="zoom:50%;" />
+    `#include "save_client/Save.h" ` 注意用""而不是<>
+    3、Save.h也有命名空间，因此需要把命名空间引入 `using namepace ::save_service`
+    4、把main函数里的内容，一字不差的复制到Pool类中的save_result函数里，然后`gg=G`格式化一下，然后开改：第一改一下socket地址 homework 4 getinfo获得
+    5、把Cacluateor替换成Save
+    6、把try里的transport.open 和close之间的所有内容都给删了
+    7、client对象是client端调用服务端函数的一个媒介，我们通过这个对象来调用函数。
+
+    ```C++
+    void save_result(int a, int b)
+            {
+                printf("Match result %d %d\n", a, b);
+    
+    
+                std::shared_ptr<TTransport> socket(new TSocket("123.57.47.211", 9090));
+                std::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
+                std::shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
+                SaveClient client(protocol);
+    
+                try {
+                    transport->open();
+    
+                    client.save_data("acs_2101", "bbf8580b", a, b);
+    
+                    transport->close();
+                } catch (TException& tx) {
+                    cout << "ERROR: " << tx.what() << endl;
+                }
+            }
+    ```
+
+    完成之后，commit一下 -m "add server"
+
+16. 升级匹配系统(match_server)：50分以内的人可以匹配，得到version3.0
+
+```C++
+// This autogenerated skeleton file illustrates how to build a server.
+// You should copy it to another filename to avoid overwriting it.
+
+#include "match_server/Match.h"//注意修改       thrift里的服务名是Match
+#include "save_client/Save.h"
+#include <thrift/protocol/TBinaryProtocol.h>
+#include <thrift/server/TSimpleServer.h>
+#include <thrift/transport/TServerSocket.h>
+#include <thrift/transport/TBufferTransports.h>
+#include <thrift/transport/TSocket.h>
+#include <thrift/transport/TTransportUtils.h>
+
+
+#include<iostream>
+#include<thread>
+#include<mutex>
+#include<condition_variable>
+#include<queue>
+#include<vector>
+#include<unistd.h>
+
+using namespace ::apache::thrift;
+using namespace ::apache::thrift::protocol;
+using namespace ::apache::thrift::transport;
+using namespace ::apache::thrift::server;
+
+using namespace  ::match_service;//thrift里的命名空间
+using namespace ::save_service;
+using namespace std;
+
+
+struct Task
+{
+    User user;
+    string type;
+};
+
+//消息队列
+struct MessageQueue
+{
+    queue<Task> q;
+    mutex m;    //互斥锁  互斥访问queue
+    condition_variable cv; //条件变量   用于唤醒等待
+}message_queue;
+
+class Pool
+{
+    public:
+        //保存的是用户id
+        void save_result(int a, int b)
+        {
+            printf("Match result %d %d\n", a, b);
+
+            std::shared_ptr<TTransport> socket(new TSocket("123.57.47.211", 9090));
+            std::shared_ptr<TTransport> transport(new TBufferedTransport(socket));
+            std::shared_ptr<TProtocol> protocol(new TBinaryProtocol(transport));
+            SaveClient client(protocol);
+
+            try {
+                transport->open();
+
+                int res = client.save_data("acs_2101", "bbf8580b", a, b);
+
+                if(!res) puts("save_seccess");
+                else puts("save_faild");
+
+                transport->close();
+            } catch (TException& tx) {
+                cout << "ERROR: " << tx.what() << endl;
+            }
+        }
+
+        void match()
+        {
+            while(users.size() > 1)
+            {
+                sort(users.begin(), users.end(), [&](User a, User b){
+                    return a.score < b.score;
+                        });
+
+                bool flag = true;
+                for(uint32_t i = 1; i < users.size(); i++)
+                {
+                    auto a = users[i - 1], b = users[i];
+                    if(b.score - a.score <= 50)
+                    {
+                        users.erase(users.begin() + i - 1, users.begin() + i + 1);
+                        save_result(a.id, b.id);
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag) break;
+            }
+        }
+        void add(User user)
+        {
+            users.push_back(user);
+        }
+
+        void remove(User user)
+        {
+            for(uint32_t i = 0; i < users.size(); i++)
+                if(users[i].id == user.id)
+                {
+                    users.erase(users.begin() + i);
+                    break;
+                }
+        }
+    private:
+        vector<User> users;
+}pool;
+
+class MatchHandler : virtual public MatchIf {
+    public:
+        MatchHandler() {
+            // Your initialization goes here
+        }
+        //生产者
+        int32_t add_user(const User& user, const std::string& info) {
+            // Your implementation goes here
+            printf("add_user:");
+            cout << user << endl;
+            unique_lock<mutex> lck(message_queue.m);//不需要显式解锁，因为当变量被注销的时候，自动解锁
+            message_queue.q.push({user, "add"});
+            message_queue.cv.notify_all();
+            return 0;
+        }
+        //生产者
+        int32_t remove_user(const User& user, const std::string& info) {
+            // Your implementation goes here
+            printf("remove_user:");
+            cout << user << endl;
+            unique_lock<mutex> lck(message_queue.m);
+            message_queue.q.push({user, "remove"});
+            message_queue.cv.notify_all();
+            return 0;
+        }
+
+};
+
+//消费者
+void consume_task()
+{
+    while(true)
+    {
+        unique_lock<mutex> lck(message_queue.m);
+        if(message_queue.q.empty())
+        {
+            //message_queue.cv.wait(lck);
+            lck.unlock();
+            pool.match();
+            sleep(1);
+        }
+        else
+        {
+            auto task = message_queue.q.front();
+            message_queue.q.pop();
+            lck.unlock();//尽早及时归还 因为下面的命令不涉及临界区了
+            //do tasks
+            if(task.type == "add") pool.add(task.user);
+            else if (task.type == "remove") pool.remove(task.user);
+
+            pool.match();
+        }
+    }
+}
+
+
+
+int main(int argc, char **argv) {
+    int port = 9090;
+    ::std::shared_ptr<MatchHandler> handler(new MatchHandler());
+    ::std::shared_ptr<TProcessor> processor(new MatchProcessor(handler));
+    ::std::shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
+    ::std::shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
+    ::std::shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
+
+    TSimpleServer server(processor, serverTransport, transportFactory, protocolFactory);
+
+    cout << "Start Match Server" << endl;
+
+    thread matching_thread(consume_task);
+
+    server.serve();
+    return 0;
+}
+```
+
+17. 把单线程改为多线程。client每向服务端发一次请求就开一个线程处理。 SimpleServer就是单线程 。在服务端的main函数中可以看到。 开并发除了handler之外还需要引入工厂类
+    方法：在cpp-tutorial-server中把代码改一改就行了： 1、头文件  2、main函数部分复制过来，simpleserver部分删去 3、 复制过来工厂类 4、替换操作：把所有的Calculator替换成Match 5、工厂类中 void releaseHandler函数中也要改一点  改成MatchIf* Handler。share也是样例里的，没用。
+    这样以后：我们把单线程变成了多线程，也即生产者变成了多线程。   然后add commit push得到了match_server version:4.0
+
+18. 下面开始实现玩家等的时间越久，可以匹配的分值的区间越大。
+19. 修改完成，得到match_server version:5.0
+
+
+
+#### 自己的胡乱尝试
+
+用以下test.thrift文件，生成的cpp的命名方式
+
+```C++
+namespace cpp JustForTest
+    struct People{
+        1:string id
+    }
+	service Dojob{
+        i32 eat(1: People p1),
+        i32 sleep(1: People p2),
+    }
+```
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130104308167.png" alt="image-20211130104308167" style="zoom:50%;" />
+
+其中skeleton是服务器端代码， 可见`Dojob.cpp 和 Dojob.h 和Dojob_server`与thrift文件中的Service命名方法一致，而`test_types.cpp和test_types.h`与thrift文件名一致
+
+
+
+#### 操作系统的知识：
+
+> 1、临界资源，临界区
+>
+> 2、semaphore信号量：
+> 只能被PV操作访问；
+> 利用信号量可以实现同步和互斥操作；
+> 信号量维护某个资源（如变量）；
+>  信号量可以分为互斥信号量和同步信号量；
+>  mutex是互斥信号量，简称为锁。 具体参考王道考研PDF96页。
+>  信号量有个初值；semaphore = 1是互斥信号量，=0是同步信号量；
+> 同步信号量在两个线程里进行PV操作，而互斥信号量在一个线程里，并且将临界区包裹住
+>
+> 3、mutex互斥锁、互斥量
+>
+> 4、PV操作原语：不可被中断的过程
+>
+> 5、条件变量
+>
+> <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211130173927715.png" alt="image-20211130173927715" style="zoom:53%;" />
+>
+> 生产者和消费者的通信媒介是消息队列（共同作用的对象？） 
+> P操作 获取一个资源（锁）  
+
+
+
+#### 其他
+
+注意服务端开的端口和CLient端访问的接口要相同
+
+ZMQ是封装了socket
+
+并行是OpenMP
+
+单线程 simpleserver
+
+make/cmake 会只编译修改了的文件
+
+
+
+
+
+
+
+#### Ubuntu20.04安装thrift
+
+[以下内容参考](https://zhuanlan.zhihu.com/p/419724200)      这个好像也行  [链接](https://developer.aliyun.com/article/792839)
+
+
+
+**本文演示[ubuntu20.04](https://www.zhihu.com/search?q=ubuntu20.04&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"article"%2C"sourceId"%3A419724200})下安装Thrift并配置CPP和Python3的使用环境**
+
+官方教程链接:[Ubuntu/Debian install](https://link.zhihu.com/?target=https%3A//thrift.apache.org/docs/install/debian.html),[Building From Source](https://link.zhihu.com/?target=https%3A//thrift.apache.org/docs/BuildingFromSource)
+
+先安装好 g++ 和 python3
+
+```bash
+sudo apt update
+sudo apt install g++
+sudo apt install python3
+```
+
+**安装 Thrift**
+
+安装相关依赖包
+
+```bash
+sudo apt-get install automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
+```
+
+安装python packages
+
+```bash
+sudo apt install python-all python-all-dev python-all-dbg
+```
+
+下载 Thrift 并解压
+
+```bash
+wget https://dlcdn.apache.org/thrift/0.15.0/thrift-0.15.0.tar.gz
+tar -xf thrift-0.15.0.tar.gz
+```
+
+执行命令
+
+```bash
+cd thrift-0.15.0/
+./configure
+```
+
+执行完后最后的输出内容如下，yes即代表将支持的语言
+
+
+
+<img src="https://pic2.zhimg.com/80/v2-69e1263ff3452b0fada772f44bca18d1_720w.jpg" alt="img" style="zoom: 67%;" />
+
+执行命令
+
+```bash
+sudo make //此步骤花费时间稍长
+sudo make install
+thrift -version //若正常输出Thrift的版本则证明安装完成
+```
+
+
+
+
 
 
 
@@ -2103,7 +3038,7 @@ match_system节点（match的server端、savedata的client端）
 
 **我的理解**
 
-> 这是一个链式编程。将一个工作分解成几个工作步骤完成，上一个命令的stdout 通过 | 传给下一个命令的stdin。这样以来就可以得到想要的结果。因此对于命令我们要知道它的stdin要什么，stdout输出什么
+> 这是一个链式编程。将一个工作分解成几个工作步骤完成，上一个命令的stdout 通过 | 传给下一个命令的stdin。这样以来一系列操作就可以得到想要的结果。因此对于命令我们要知道它的stdin要什么，stdout输出什么
 
 也即：==将|前的命令的stdout           传给->     |后命令的stdin==
 
@@ -2114,15 +3049,24 @@ match_system节点（match的server端、savedata的client端）
 #### **要点**
 
 - 管道命令仅处理stdout，会忽略stderr。
-- ==**管道右边的命令必须能接受stdin**==。 若是不能接受，则也不能用管道了
-- 多个管道命令可以串联。
+- ==**管道右边的命令必须能接受stdin**==。 若是不能接受，则也不能用管道了，或者命令接受stdin，但是不是想要的结果，也没啥用
+- 多个管道命令可以一直串联下去。
 
 ---
 
 #### **与文件重定向的区别**
 
 - 文件重定向左边为命令，右边为文件。
+
 - 管道左右两边均为命令，左边有stdout，右边有stdin。
+
+- 文件重定向：
+
+- | 命令            | 说明                             |
+  | --------------- | -------------------------------- |
+  | command > file  | 将stdout重定向到file中           |
+  | command < file  | 将stdin重定向到file中            |
+  | command >> file | 将stdout以追加方式重定向到file中 |
 
 ---
 
@@ -2139,9 +3083,9 @@ find . -name '*.py' | xargs cat | wc -l
 ```bash
 1、find /path/to/directory/ -name '*.py'   #搜索某个文件路径下的所有*.py文件
 
-2、xargs  # 将stdin中的数据用空格或回车分割成命令行参数传给命令，stdin->命令参数 。**也即把stdin的内容接到xargs后面的命令的后面!!!!**
+2、xargs  # 将stdin中的数据用空格或回车分割成命令行参数传给命令，也即stdin->命令参数 。**也即把stdin的内容接到xargs后面的命令的后面!!!!**
 
-3、比如cat命令，它接受标准输入stdin就直接输出到stdout了，若接受命令行参数，则把文件的内容展示
+3、比如cat命令，它接受标准输入stdin就直接输出到stdout了，没啥用。但若接受命令行参数，则把文件里的内容展示出来
 
 4、wc：统计行数、单词数、字节数。既可以从stdin中直接读入内容；也可以在命令行参数中传入文件名列表；
  -l：统计行数
@@ -2300,40 +3244,64 @@ echo $PATH
 
 #### 文件检索
 
-1. **find** /path/to/directory/ -name '*.py'：搜索某个文件路径下的所有*.py文件
+1. **find** /path/to/directory/ -name '\*.py'：搜索某个文件路径下的所有*.py文件
+
 2. **grep** xxx：从stdin中读入若干行数据，如果某行中包含xxx，则输出该行；否则忽略该行。
+
 3. **wc**：统计行数、单词数、字节数
    - 既可以从**stdin**中直接读入内容；也可以在**命令行参数**中传入文件名列表；
+   - 区别是stdin是直接统计，而命令行是统计**每个**文件内容
    - 不加参数，展示行数、单词数、字节数
    - wc **-l**：统计行数
    - wc **-w**：统计单词数
    - wc **-c**：统计字节数
    - 可以跟多个参数  例如 `tmp/*`
    - **wc和grep都可以在命令行直接输入，然后命令行变成执行状态，可以输入字符、回车，然后Ctrl+D可以推出**
+   
 4. **tree**：展示当前目录的文件结构
+   
    - tree /path/to/directory/：展示某个目录的文件结构
    - tree -a：展示隐藏文件
+   
 5. ==ag== xxx：搜索当前目录下的所有文件，检索xxx字符串
+
 6. cut：分割每行的内容
    - 从stdin中读入多行数据
+   
+   - **cut命令，从stdin读入多行数据，-d指定分隔符，-f选择其中的某一列。然后将原多行数据分割后形成的多行数据，输出到stdout里**
+   
    - -c ：以字符为单位进行分割。
+   
    - -d ：自定义分隔符，默认为制表符。
+   
    - -f ：与-d一起使用，指定显示哪个区域。
+   
    - 例子：
      - echo $PATH | cut -d ':' -f 3,5：输出PATH用:分割后第3、5列数据
+     
      - echo $PATH | cut -d ':' -f 3-5：输出PATH用:分割后第3-5列数据
+     
      - echo $PATH | cut -c 3,5：输出PATH的第3、5个字符
+     
      - echo $PATH | cut -c 3-5：输出PATH的第3-5个字符
+     
      - <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211120165038691.png" alt="image-20211120165038691" style="zoom:50%;" />
-     - cut命令，从stdin读入多行数据，-d指定分隔符，-f选择其中的某一列
+     
+       
+   
 7. sort：将每行内容按字典序排序
-   - 可以从stdin中读取多行数据
+   - **可以从stdin中读取多行数据，然后排序后，输出到stdout里**
    - 可以从命令行参数中读取文件名列表
    - 配合find来用
+   
 8. **xargs**：将stdin中的数据用空格或回车分割成命令行参数
-   - 因为有些命令不接受标准输入，而管道符之间的连接必须是stdout和stdin，也即后一个命令接受到的只能是前一个命令的stdout，并且放在stdin里，这时xargs就很关键了
+   - 因为有些命令不接受标准输入stdin，或者不是想要的结果。而管道符之间的连接必须是stdout和stdin，也即后一个命令接受到的只能是前一个命令的stdout，并且放在stdin里，这时xargs就很关键了
    - find . -name '*.py' | xargs cat | wc -l：统计当前目录下所有python文件的总行数
    - find . -name '*.py' | xargs cat 将所有Python文件输出
+
+
+
+
 
 #### 查看文件内容
 
@@ -2567,7 +3535,7 @@ Host myserver1
 	User wangchen
 ```
 
-​	2、配置免密登录：如果本地服务器中没有生产ssh公钥秘钥的话要先生成`ssh-keygen`，在`~/.ssh/config`文件夹下。 通过`ssh-copy-id myserver1`,输入密码，完成！
+​	2、配置免密登录：如果本地服务器中没有生成ssh公钥秘钥的话要先生成`ssh-keygen`，在`~/.ssh/config`文件夹下。 通过`ssh-copy-id myserver1`,输入密码，完成！
 
 8. 我们直接`ssh myserver1`就可以登录到服务器了！以上就完成了服务器用户的添加，密码登录
 
@@ -2608,7 +3576,9 @@ Host myserver1
 
 
 
-其他：重装操作系统就是更换操作系统
+#### 其他：
+
+重装操作系统就是更换操作系统
 
 养成好习惯，所有工作都在tmux里进行，防止意外关闭终端后，工作进度丢失
 
@@ -2620,9 +3590,220 @@ Host myserver1
 
 ### 2、doker教程
 
-配完docker之后，发现docker很多命令都要加上sudo权限才能运行，怎样才能避免每次使用docker命令都要sudo权限呢？ 把当前的用户添加到docker用户组里就行了。
+配完docker之后，发现docker很多命令都要加上sudo权限才能运行，怎样才能避免每次使用docker命令都要sudo权限呢？ 把当前的用户添加到docker用户组里就行了。`sudo usermod -aG docker $USER` 这样以后只需要输入docker+...就可以了。
+
+docker的概念：
+
+镜像image ：
+
+docker会有很多镜像，镜像image就是模板
+
+**每一个image可以生产若干个一大堆容器container。用相同镜像生成的容器的环境都完全一样。每一个容器都相当于一个完全独立的云端服务器。**
+
+docker**镜像**和**容器**就可以理解成**类**和**实例**的关系。**容器就是服务器**
+
+docker会做很多优化，比如第二个镜像是在第一个镜像的基础上改了改，相同的内容只会存一份，空间优化，容器也会空间优化（像git一样）。
+
+镜像可以生成容器，容器也可以再创造一个镜像。
+
+怎么迁移容器呢？ 将容器刻个模子，生成一个镜像image（压缩文件），传到其他服务器上加载到docker里面，用镜像生成一个新的容器就可以。container->image->其他服务器->通过docker->container
+
+
+
+docker官方提供了很多镜像，类似github，可以拉去一个Ubuntu20.04
+
+每一个镜像都由两部分构成 xxxx：xxxx   前一部分是名称，后一部分是tag（版本号） 如 **Ubuntu:20.04**
+
+
+
+#### 将当前用户添加到docker用户组
+
+为了避免每次使用docker命令都需要加上sudo权限，可以将当前用户加入安装中自动创建的docker用户组(可以参考官方文档)：
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+这样以后只需要输入docker+...就可以了。
+
+
+
+#### 镜像（images）
+
+1. docker pull ubuntu:20.04：拉取一个镜像
+2. docker images：列出本地所有镜像
+3. docker image rm ubuntu:20.04 或 docker rmi ubuntu:20.04：删除镜像ubuntu:20.04
+4. docker [container] **commit** CONTAINER IMAGE_NAME:TAG：**创建某个container的镜像**
+5. docker **save** -o ubuntu_20_04.tar ubuntu:20.04：**将镜像ubuntu:20.04导出到本地文件ubuntu_20_04.tar中**
+6. docker **load** -i ubuntu_20_04.tar：**将镜像ubuntu:20.04从本地文件ubuntu_20_04.tar中加载出来**
+
+一旦生成了容器，没办法新加端口，但是想加也很简单：先把container   commit成一个image，把原container删除，然后重新生成一个开放新端口的container。
+
+#### 容器(container)
+
+1. docker [container] create -it ubuntu:20.04：**利用镜像ubuntu:20.04创建一个容器**。
+2. docker ps -a：查看本地的所有容器
+   - 不加-a是查看正在运行的，加上之后可以看到所有的容器，包括刚创建但未运行的
+3. docker [container] start CONTAINER：启动容器
+   - 可以是id，可以是name
+4. docker [container] stop CONTAINER：停止容器
+5. docker [container] restart CONTAINER：重启容器
+6. docker [contaienr] run -itd ubuntu:20.04：创建并启动一个容器
+   - 加上d，创建并启动。不加d，会创建启动并进去。
+7. docker [container] attach CONTAINER：进入容器
+   - **先按Ctrl-p，再按Ctrl-q可以挂起容器**，用的不多，因为后面就ssh登录了
+   - Ctrl + d 也能退出容器，但是这样会把容器关掉
+8. docker [container] exec CONTAINER COMMAND：在容器中执行命令
+9. docker [container] rm CONTAINER：删除容器
+10. docker container prune：删除所有已停止的容器
+11. docker export -o xxx.tar CONTAINER：**将容器CONTAINER导出到本地文件xxx.tar中**
+12. docker import xxx.tar image_name:tag：将本地文件xxx.tar导入成镜像，并将镜像命名为image_name:tag
+    - 也可以直接docker import xxx.tar 这样生成的镜像没有名字
+13. docker export/import与docker save/load的区别：
+    - **export/import会丢弃历史记录和元数据信息，仅保存容器当时的快照状态**
+    - **save/load会保存完整记录，体积更大**
+    - **容器不能直接迁移，export和import也是迁移镜像**
+14. docker top CONTAINER：查看某个容器内的所有进程
+15. docker stats：查看所有容器的统计信息，包括CPU、内存、存储、网络等信息
+16. docker cp xxx CONTAINER:xxx 或 docker cp CONTAINER:xxx xxx：在本地和容器间复制文件
+    - 不用加 -r
+17. docker rename CONTAINER1 CONTAINER2：重命名容器
+18. docker update CONTAINER --memory 500MB：修改容器限制
+
+官网的搜索框很好用，什么命令不懂可以直接插，比如不懂update，直接在官网搜`docker update`
 
 
 
 
 
+
+
+#### 实战
+
+进入AC Terminal，然后：
+
+```bash
+scp /var/lib/acwing/docker/images/docker_lesson_1_0.tar server_name:  # 将镜像上传到自己租的云端服务器
+ssh server_name  # 登录自己的云端服务器
+
+docker load -i docker_lesson_1_0.tar  # 将镜像加载到本地
+docker run -p 20000:22 --name my_docker_server -itd docker_lesson:1.0  # 创建并运行docker_lesson:1.0镜像
+
+docker attach my_docker_server  # 进入创建的docker容器
+passwd  # 设置root密码
+```
+
+
+去云平台控制台中修改安全组配置，放行端口20000。
+
+返回AC Terminal，即可通过ssh登录自己的docker容器：
+
+```bash
+ssh root@xxx.xxx.xxx.xxx -p 20000  # 将xxx.xxx.xxx.xxx替换成自己租的服务器的IP地址
+```
+
+然后，可以仿照上节课内容，创建工作账户acs。
+
+最后，可以参考4. ssh——ssh登录配置docker容器的别名和免密登录。
+
+---
+
+**小Tips**
+
+如果apt-get下载软件速度较慢，可以参考清华大学开源软件镜像站中的内容，修改软件源。
+
+root用户不能修改密码，只能设置密码，因为权利很大
+
+---
+
+##### 我的详细记录△：
+
+能自动补全，说明命令写的没问题，不能则有问题
+
+```bash
+#在ACterminal中：
+scp /var/lib/acwing/docker/images/docker_lesson_1_0.tar server_name:  # 将镜像上传到自己租的云端服务器
+
+#进入到了腾讯云：
+ssh server_name  # 登录自己的云端服务器
+
+docker load -i docker_lesson_1_0.tar  # 将镜像加载到本地
+docker run -p 20000:22 --name my_docker_server -itd docker_lesson:1.0  # 创建并运行docker_lesson:1.0镜像  将docker中container服务器的端口号22映射到腾讯云的20000端口，以后登录到container时，通过同样的ip地址不同的端口号登录。
+
+#进入到了docker中的容器里
+docker attach my_docker_server  # 进入创建的docker容器
+passwd  # 设置root密码
+Ctrl + p  Ctrl + q#退出
+
+#进入到了腾讯云
+ssh root@localhost -p 20000  #试一下从腾讯云进入到腾讯云里的container
+Ctrl + d #断开ssh连接
+
+#记得在腾讯云官网的安全组里放行20000端口
+
+#进入到了腾讯云
+Ctrl + d #断开ssh连接
+
+#进入到了AcTerminal
+ssh root@82.156.36.251 -p 20000 #从AcTerminal直接登录到了腾讯云中的container
+
+#↑以上我们完成了从本地终端ACTerminal登录到腾讯云服务器中的container里
+
+#连接到了Container
+adduser wangchen_docker  #添加用户
+usermod -aG sudo wangchen_docker #分配sudo权限
+Ctrl + d #断开连接
+
+#退回到了AcTerminal
+ssh wangchen_docker@82.156.36.251 -p 20000#进入到了container中的wangchen_docker用户下
+```
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211124160735053.png" alt="image-20211124160735053" style="zoom:33%;" />
+
+```bash
+#下面配置从ACTerminal中的免密登录
+#在~/.ssh/config文件中，增加如下
+Host myserver1_docker
+    HostName 82.156.36.251
+    User wangchen_docker
+    Port 20000
+
+#把公钥复制到container中wangchen_docker用户下的家目录里
+ssh-copy-id myserver1_docker
+
+#以上↑完成了从ACTerminal中的免密登录到Container里的wangchen_docker用户，大功告成
+```
+
+
+
+```bash
+#很明显这个服务器Container是个毛坯，且wangchen_docker用户没什么权限
+#改造：
+
+#退回到ACTerminal中，然后以root用户登录，装sudo命令
+apt-get update
+apt-get install sudo
+#然后退回ACTerminal并登录到wangchen_docker,装命令和软件
+sudo apt-get install tree
+sudo apt-get install python3
+sudo apt-get install ipython3
+sudo apt-get install tmux
+
+#然后把祖传文件传到container里
+Ctrl+D#回到ACTerminal
+scp .bashrc .vimrc .tmux.conf myserver1_docker:
+```
+
+
+
+
+
+
+
+---
+
+小结：
+
+从container退出到云服务器里是Ctrl + p、q    用的不多
+
+断开ssh连接是 Ctrl + D  ，牢记

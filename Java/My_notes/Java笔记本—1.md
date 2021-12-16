@@ -144,7 +144,7 @@ $$
 
 
 > 1. 用public修饰类可以被所有软件包使用，但注意要导包。  
-> 2. ==java文件中可以有多个类，但只能有一个（也可以一个都没有）public修饰的类，且该类的类名 和java文件名相同==  也即可以有多个 class 但只能有一个public class
+> 2. ==一个java文件中可以有多个类，但只能有一个（也可以一个都没有）public修饰的类，且该类的类名 和java文件名相同==  也即可以有多个 class 但只能有一个public class
 
 
 
@@ -152,9 +152,17 @@ $$
 
 
 
+## 编译过程
 
 
 
+[链接](https://zhuanlan.zhihu.com/p/361915411#:~:text=Java%E4%BB%A3%E7%A0%81%E7%BC%96%E8%AF%91%E5%92%8C%E6%89%A7%E8%A1%8C%E7%9A%84%E6%95%B4%E4%B8%AA%E8%BF%87%E7%A8%8B%E5%8C%85%E5%90%AB%E4%BA%86%E4%BB%A5%E4%B8%8B%E4%B8%A4%E4%B8%AA%E9%87%8D%E8%A6%81%E7%9A%84%E6%9C%BA%E5%88%B6%EF%BC%9A%20%E5%88%9B%E5%BB%BA%E5%AE%8C%E6%BA%90%E6%96%87%E4%BB%B6%E4%B9%8B%E5%90%8E%EF%BC%8C%E7%A8%8B%E5%BA%8F%E5%85%88%E8%A6%81%E8%A2%ABJVM%E4%B8%AD%E7%9A%84java%E7%BC%96%E8%AF%91%E5%99%A8%E8%BF%9B%E8%A1%8C%E7%BC%96%E8%AF%91%E4%B8%BA.class%E6%96%87%E4%BB%B6%E3%80%82,.java%E6%96%87%E4%BB%B6%E7%BC%96%E8%AF%91%E6%88%90.class%E6%96%87%E4%BB%B6%E7%9A%84%E8%BF%87%E7%A8%8B%E4%B8%AD%EF%BC%8C%E5%8C%85%E6%8B%AC%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E3%80%81%E5%A1%AB%E5%85%85%E7%AC%A6%E5%8F%B7%E8%A1%A8%E3%80%81%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E3%80%81%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%E4%BB%A5%E5%8F%8A%E7%94%9F%E6%88%90class%E6%96%87%E4%BB%B6%E3%80%82%20%E7%BC%96%E8%AF%91%E5%90%8E%E7%9A%84class%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E4%B8%AD%E4%B8%BB%E8%A6%81%E5%8C%85%E5%90%AB%E4%BA%86%E5%A6%82%E4%B8%8B%E4%BF%A1%E6%81%AF%EF%BC%9A)
+
+[链接2](https://blog.csdn.net/chenlibao0823/article/details/102983756)
+
+## 命令行
+
+https://blog.csdn.net/ncc1995/article/details/84932759
 
 ---
 
@@ -208,7 +216,6 @@ public class demo03 {
 		System.out.println(c.num);	//	10000
 	}
 }
-
 ```
 
 

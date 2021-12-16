@@ -83,6 +83,50 @@
 
 ​			float有效数字位为6 – 7位 double有效数字位为15 – 16位
 
+
+
+## 几个数据类型
+
+[主要参考](http://blog.sina.com.cn/s/blog_9dcc0fb90101gdvo.html)
+
+[参考](http://www.360doc.com/content/18/1208/12/32862269_800182367.shtml)
+
+```C
+  
+#ifndef __int8_t_defined  
+# define __int8_t_defined  
+typedef signed char             int8_t;   
+typedef short int               int16_t;  
+typedef int                     int32_t;  
+# if __WORDSIZE == 64  
+typedef long int                int64_t;  
+# else  
+__extension__  
+typedef long long int           int64_t;  
+# endif  
+#endif  
+  
+  
+typedef unsigned char           uint8_t;  
+typedef unsigned short int      uint16_t;  
+#ifndef __uint32_t_defined  
+typedef unsigned int            uint32_t;  
+# define __uint32_t_defined  
+#endif  
+#if __WORDSIZE == 64  
+typedef unsigned long int       uint64_t;  
+#else  
+__extension__  
+typedef unsigned long long int  uint64_t;  
+#endif  
+```
+
+
+
+
+
+
+
 ## 自动类型转换（小心溢出）
 
 **int  21亿 ≈2*10^9  ）**
