@@ -150,6 +150,16 @@ cat 文件名、 more 文件名  按q退出 按空格一帧 回车一行
 
 
 
+## 六、问题解答
+
+#### 1.sudo cd
+
+sudo 是一种程序，用于提升用户的权限，在[linux](https://so.csdn.net/so/search?from=pc_blog_highlight&q=linux)中输入sodu就是调用这个程序提升权限，shell是一个命令解析器，sudo cd是错误的，因为cd是shell内置的，不是系统里面的，sudo可以运行系统带的命令，但无法用系统中一个软件中的命令。
+
+cd是shell的内部命令。所谓shell是一个交互式的应用程序。shell执行外部命令的 时候，是通过fork/exec叉一个子进程，然后执行这个程序。sudo的意思是，以别人的权限叉起一个进程，并运行程序。而cd是内部命令，也就是说，是直接由shell运行的，不叉子进程。你在当前进程里当然不能提升进程的权限（其实也可以，不过得编程的时候写到代码里，然后再编译，而我们的 shell没有这个功能，否则岂不是太危险了？）
+
+
+
 # AcWing Linux
 
 ## 1、常用文件管理命令
@@ -3806,4 +3816,4 @@ scp .bashrc .vimrc .tmux.conf myserver1_docker:
 
 从container退出到云服务器里是Ctrl + p、q    用的不多
 
-断开ssh连接是 Ctrl + D  ，牢记
+断开ssh连接是 Ctrl + D  ，牢记 x

@@ -1142,7 +1142,8 @@ double acos(double d)
 double atan(double d)
 
 double atan2(double y, double x)//由坐标(x,y)返回所得角 弧度θ，该方法通过计算 y/x 的反正切值来计算相角 theta，范围为从 -pi 到 pi。
-    //也即给定(x,y)求夹角的弧度
+    //也即给定(x,y)
+    //return夹角的弧度
 ```
 
 > 几个概念要清楚：

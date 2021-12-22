@@ -415,7 +415,188 @@ function onSubmit(e) {
 }
 ```
 
+## 七、原理
 
+### 原理1
+
+[以下参考](https://blog.csdn.net/GY_U_YG/article/details/72869315)
+
+JS是一门脚本语言，不需要编译，边解释边执行，所以在性能上比不上C/C++这样的编译型语言。JS的执行引擎有好多种，这些解析引擎大都存在于浏览器内核之中，比如：
+
+Chrome ：  webkit/blink ： V8
+FireFox：  Gecko        :  SpiderMonkey
+Safari ：  webkit       ： JavaScriptCore
+IE     ：  Trident      ： Chakra
+
+JS不一定非要在浏览器中运行，只要有JS引擎即可，最典型的比如NodeJS，采用了谷歌的v8引擎，使得JS完全脱离浏览器运行。
+
+**浏览器显示HTML**
+不同的浏览器对HTML的解析过程不太相同，这里介绍一下webkit的渲染过程：
+构建DOM树、构建Render树，布局Render树，绘制Render树。
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211220105353321.png" alt="image-20211220105353321" style="zoom:50%;" />
+
+**浏览器在解析HTML文件的时候，“自上而下”加在，加载的过程中进行解析渲染。在解析过程中，如果遇到请求外部资源，如图片、CSS、iconfot等，这些请求过程是异步的，不会影响HTML文档的继续加载和解析。**
+
+**解析过程中，浏览器首先会解析HTML文件构造DOM树，然后解析CSS文件构建渲染树，渲染树构建完成后，浏览器开始布局渲染树并将其绘制到屏幕。这个过程非常复杂，涉及到两个概念：reflow 和 repaint。**
+
+DOM节点中各个元素都是盒模型，要求浏览器去计算位置大小等，这个过程是reflow，当盒子模型位置、大小、其他属性如颜色，字体确定之后，浏览器便开始绘制内容，这个过程叫做repaint。
+
+页面首次加载的时候，两个过程都会发生，这两个过程都很消耗性能，尤其是reflow，如果优化的不好，会造成很坏的用户体验。所以，我们要尽量减少reflow和repaint。尽量合并一些过程，比如要改变某个元素的多个属性。有三个方法：
+
+ele.style.width = '100px';
+ele.style.height = '200px';
+ele.style.color = 'red';
+
+ele.style.cssText = ';width:'+100+'px;height:'+200+'px;color:red';
+1
+.cls {
+    width:100px;
+    height:200px;
+    color:red;
+}
+
+ele.addClass('cls');
+
+这三种方法，明显我们不要采用第一种，因为每一句都会造成浏览器重绘，很消耗性能。第二种第三种就很好，合并之后，一次性渲染。
+
+**JS的执行**
+先上一幅图：
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211220105332681.png" alt="image-20211220105332681" style="zoom:50%;" />
+
+**当文档加载过程中遇到JS文件，HTML文档会立马挂起渲染的线程（加载解析渲染同步进行），挂起后，要等到JS文件加载完而且解析执行完之后，才恢复HTML文档的渲染线程。为啥？因为JS可能会修改DOM结构，最明显的例子就是document.write，一句让你前功尽弃。这也就意味着：在JS执行完成之前，后续所有资源的下载都可能没有必要没有意义，这也就是JS阻塞后续资源下载的根本原因，所以，开发过程中，经常把JS代码放到HTML文档末尾。**
+
+JS的解析是由浏览器的JS解析引擎完成的。**JS是单线程运行**，换言之：同一个时间只做一件事，所有的任务都得排队，前面一个任务结束，后面一个任务才能开始。所以，当遇到很耗费时间的任务，比如I/O读写等，需要一种机制可以先执行后面的任务。这就有了同步和异步。
+
+JS的执行机制就是一个主线程 + 一个任务队列。同步任务就是放在主线程上执行的任务，异步任务就是放在任务队列的任务。所有的同步任务都在主线程执行，这构成了一个执行栈，异步任务有了运行结果会在任务队列中放置一个事件，比如定时2秒，到2秒后才能放进任务队列（callback放进任务队列，而不是setTimeout函数放进队列）。脚本运行时，先依次运行执行栈，然后从队列中提取事件来运行任务队列中的任务，这个过程是不断重复的。所以叫事件循环（Event Loop）。
+
+
+
+
+
+### 原理2
+
+[以下参考](https://blog.csdn.net/minemi/article/details/111304718)
+
+1.关于javascript
+javascript是一门单线程语言，在最新的HTML5中提出了Web-Worker，但javascript是单线程这一核心仍未改变。所以一切javascript版的"多线程"都是用单线程模拟出来的，一切javascript多线程都是纸老虎！
+
+2.javascript事件循环
+  既然js是单线程，那就像只有一个窗口的银行，客户需要排队一个一个办理业务，同理js任务也要一个一个顺序执行。如果一个任务耗时过长，那么后一个任务也必须等着。那么问题来了，假如我们想浏览新闻，但是新闻包含的超清图片加载很慢，难道我们的网页要一直卡着直到图片完全显示出来？因此聪明的程序员将任务分为两类：
+
+- 同步任务
+- 异步任务
+
+  当我们打开网站时，网页的渲染过程就是一大堆同步任务，比如页面骨架和页面元素的渲染。而像加载图片音乐之类占用资源大耗时久的任务，就是异步任务。
+
+1. 同步和异步任务分别进入不同的执行"场所"，同步的进入主线程，异步的进入EventTable并注册函数。
+2. 当指定的事情完成时，EventTable会将这个函数移入EventQueue。
+3. 主线程内的任务执行完毕为空，会去EventQueue读取对应的函数，进入主线程执行。
+4. 上述过程会不断重复，也就是常说的EventLoop(事件循环)。
+
+  我们不禁要问了，那怎么知道主线程执行栈为空啊？js引擎存在monitoringprocess进程，会持续不断的检查主线程执行栈是否为空，一旦为空，就会去EventQueue那里检查是否有等待被调用的函数。
+说了这么多文字，不如直接一段代码更直白：
+
+```javascript
+let data=[];
+$.ajax({undefined
+url:www.javascript.com,
+data:data,
+success:()=>{undefined
+console.log('发送成功!');
+}
+})
+console.log('代码执行结束');
+```
+
+上面是一段简易的ajax请求代码：
+ajax进入EventTable，注册回调函数success。
+执行console.log('代码执行结束')。
+ajax事件完成，回调函数success进入EventQueue。
+主线程从EventQueue读取回调函数success并执行。
+相信通过上面的文字和代码，你已经对js的执行顺序有了初步了解。接下来我们来研究进阶话题：setTimeout。
+
+
+
+### **setTimeout**
+
+setTimeout是异步的
+
+先看一个例子：
+
+```javascript
+setTimeout(()=>{undefined
+task();
+},3000)
+console.log('执行console');
+```
+
+根据前面我们的结论，setTimeout是异步的，应该先执行console.log这个同步任务，所以我们的结论是：
+
+```
+//执行console
+//task()复制代码
+```
+
+去验证一下，结果正确！
+
+然后我们修改一下前面的代码：
+
+```javascript
+setTimeout(()=>{undefined
+task()
+},3000)
+sleep(10000000)
+```
+
+  乍一看其实差不多嘛，但我们把这段代码在chrome执行一下，却发现控制台执行task()需要的时间远远超过3秒，说好的延时三秒，为啥现在需要这么长时间啊？
+
+这时候我们需要重新理解setTimeout的定义。我们先说上述代码是怎么执行的：
+
+1. task()进入EventTable并注册,计时开始。
+2. 执行sleep函数，很慢，非常慢，计时仍在继续。
+3. 3秒到了，计时事件timeout完成，task()进入EventQueue，但是sleep也太慢了吧，还没执行完，只好等着。
+4. sleep终于执行完了，task()终于从EventQueue进入了主线程执行。
+
+
+
+setTimeout(fn,0)的含义是，指定某个任务在主线程最早可得的空闲时间执行，意思就是不用再等多少秒了，只要主线程执行栈内的同步任务全部执行完成，栈为空就马上执行。
+
+
+
+### **setInterval**
+
+对于执行顺序来说，setInterval会每隔指定的时间将注册的函数置入EventQueue，如果前面的任务耗时太久，那么同样需要等待。
+唯一需要注意的一点是，对于setInterval(fn,ms)来说，我们已经知道不是每过ms秒会执行一次fn，而是每过ms秒，会有fn进入EventQueue。
+
+
+
+[以下参考，详细](https://blog.csdn.net/GY_U_YG/article/details/72869315)
+
+JS的执行机制就是一个主线程 + 一个任务队列。同步任务就是放在主线程上执行的任务，异步任务就是放在任务队列的任务。所有的同步任务都在主线程执行，这构成了一个执行栈，异步任务有了运行结果会在任务队列中放置一个事件，比如定时2秒，到2秒后才能放进任务队列（callback放进任务队列，而不是setTimeout函数放进队列）。脚本运行时，先依次运行执行栈，然后从队列中提取事件来运行任务队列中的任务，这个过程是不断重复的。所以叫事件循环（Event Loop）。
+
+
+
+
+
+四、具体来说，异步运行机制如下：
+
+（1）所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。
+
+（2）主线程之外，还存在一个"任务队列"（task queue）。只要异步任务有了运行结果，就在"任务队列"之中放置一个事件。
+
+（3）一旦"执行栈"中的所有同步任务执行完毕，系统就会读取"任务队列"，看看里面有哪些事件。那些对应的异步任务，于是结束等待状态，进入执行栈，开始执行。
+
+（4）主线程不断重复上面的第三步。
+
+
+
+
+
+### 执行顺序
+
+[参考](https://blog.csdn.net/wnvalentin/article/details/79769393)
 
 
 
@@ -443,4 +624,6 @@ y==10//true
 const z='10';
 z==10//false
 ```
+
+
 

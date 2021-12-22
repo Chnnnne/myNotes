@@ -1413,7 +1413,7 @@ path('', include('game.urls'))
 
 
 
-
+**开发流程，写templates的html，写views，写urls，完善js/css**
 
 
 
@@ -1444,6 +1444,8 @@ LANGUAGE语言默认是英语，不推荐改变。
 下面：我们设置一下静态文件的地址，进到acapp/acapp/settings.py的最后一行，看到120+行有STATIC_URL参数。接下来我们还需要加上另外三句话：`STATIC_ROOT = os.path.join(BASE_DIR, 'static')`代表静态文件存到项目的哪一个文件夹里面，BASE_DIR在开头定义的，另外需要导入一下os包，在开头`import os`。表示我们要将文件放到BASE_DIR/static文件夹下了。也即~/acapp/game/static
 
 除此之外，还有一个类似的，`MEDIA_ROOT = os.path.join(BASE_DIR, 'media')`和`MEDIA_URL = '/media/'`
+
+此处的os.path.join函数的作用就是合并路径。
 
 
 
@@ -1560,7 +1562,7 @@ class AcGame {
 from django.shortcuts import render # 在服务器端渲染一个html文件。渲染的意思就是将html文件的内容拿过来拼接字符串
 
 def index(request):
-    return render(request, "multiends/web.html") # 从templates目录下开始写,可能是因为render默认会去templates文件夹
+    return render(request, "multiends/web.html") # 从templates目录下开始写,可能是因为render默认会去templates文件夹,注意！！！！！！！
 ```
 
 
@@ -1649,8 +1651,243 @@ class AcGameMenu{
 
 
 
-```css
+### 3.10本节课的关键文件！！
+
+#### html和JS
+
+game/templates/web.html
+
+```html
+{% load static %}
+<head>
+    <!--head里可以引入资源 第一行是css文件，第二行是jQuery文件。-->
+    <link rel="stylesheet" href="https://cdn.acwing.com/static/jquery-ui-dist/jquery-ui.min.css">
+    <script src="https://cdn.acwing.com/static/jquery/js/jquery-3.3.1.min.js"></script>
+    <!--我们也可以引入自己写的css文件，写法如下： 注意的是，我们使用Django自带的工具,如下面的写法所示：！！！，此外还需要在开头加上一句话-->
+    <link rel="stylesheet" href="{% static 'css/game.css'%}"
+    <!--下面导入js文件,注意Django里的静态文件就要这样写，大括号百分百号。   注意script需要闭标签-->
+    <script src="{% static 'js/dist/game.js' %}"> </script>
+
+</head>
+
+<!--margin:0什么含义呢？ html里面每一个元素都有一个属性叫margin，比如我们有一个矩形，margin:5的意思就是，矩形的真实宽度是矩形的一圈加上5px，而margin:0就表示当前的边界就是真实边界，不要外延，后者不加这句话会默认外延一小部分-->
+<body style="margin: 0">
+    <div id="ac_game_12345678"></div>
+    <script>
+        $(document).ready(function(){
+            let ac_game = new AcGame("ac_game_12345678");
+        })
+    </script>
+</body>
+
 ```
+
+game/static/js/src/zbase.js
+
+```javascript
+class AcGame {
+    constructor(id){
+        this.id = id;
+        this.$ac_game = $('#' + id); //ac_game是给div取的名字，这行代码的意义是使用jQuery获得html里的div对象
+        this.menu = new AcGameMenu(this);
+        this.playground = new AcGamePlayground(this);
+
+        this.start();
+    }
+
+    start(){//start其实就是构造函数的延伸
+    
+    }
+}
+```
+
+game/static/js/src/menu/zbase.js
+
+```javascript
+class AcGameMenu{
+    constructor(root){
+        this.root = root; //root对象就是web.html里的ac_game对象
+        this.$menu = $(`
+<div class="ac-game-menu">
+    <div class="ac-game-menu-field">
+        <div class="ac-game-menu-field-item ac-game-menu-field-item-single-mode">
+            单人模式
+        </div>
+        <br>
+        <div class="ac-game-menu-field-item ac-game-menu-field-item-multi-mode">
+            多人模式
+        </div>
+        <br>
+        <div class="ac-game-menu-field-item ac-game-menu-field-item-settings">
+            设置
+        </div>
+    </div>
+</div>
+         `);
+        //创建当前界面,html对象前一般加一个$，普通对象不加$。注意不是'而是`,类似python的''' 怎么写怎么显示到前端。
+        this.root.$ac_game.append(this.$menu);
+        this.$single_mode = this.$menu.find(".ac-game-menu-field-item-single-mode");
+        this.$multi_mode = this.$menu.find(".ac-game-menu-field-item-multi-mode");
+        this.$settings = this.$menu.find(".ac-game-menu-field-item-settings")
+         
+        this.start();
+    }
+
+    start(){
+        this.add_listening_events();
+    }
+    //流程：constructor->start->add_listening_events
+    add_listening_events(){
+        //注意：在function内部使用this的时候其实是function本身，而不是外边的this，所以我们需要先把外边的this存一下
+        let outer = this;
+        this.$single_mode.click(function(){
+            outer.hide();
+            outer.root.playground.show();
+        });
+        this.$multi_mode.click(function(){
+            console.log("click multi mode");
+        });
+        this.$settings.click(function(){
+            console.log("click settings");
+        });
+    }
+    show(){
+        this.$menu.show();
+    }
+    hide(){//关闭menu界面。点完单人多人模式后，关闭menu界面打开游戏界面
+        this.$menu.hide();
+    }
+}
+```
+
+acapp/game/static/js/playground/zbase.js
+
+```javascript
+class AcGamePlayground{
+    constructor(root){
+        this.root = root;
+        this.$playground = $(`<div>游戏界面<div/>`);
+    
+        this.hide();
+        this.root.$ac_game.append(this.$playground);
+
+        this.start();
+    }
+    start(){
+
+    }
+    update(){
+
+    }
+
+    show(){//打开playground界面
+        this.$playground.show();
+    }
+    hide(){//关闭playground界面
+        this.$playground.hide();
+    }
+}
+```
+
+game/static/css/game.css
+
+```css
+.ac-game-menu {
+    width: 100%;
+    height: 100%;
+    background-image: url("/static/image/menu/background.gif");
+    background-size: 100% 100%;
+    user-select:none;
+}
+
+.ac-game-menu-field {
+    /*百分比单位，vh是百分比高度，  vw是百分比宽度 
+     top是左上角距离上方的高度
+     left是到左边的宽度
+     * */
+    width: 20vw;
+    position: relative;
+    top: 40vh;
+    left: 19vw;
+}
+.ac-game-menu-field-item {
+    color: white;
+    height: 6vh;
+    width: 18vw;
+    font-size: 4vh;
+    font-style: italic;
+    text-align: center;
+    background-color: rgba(39,21,28, 0.6);
+    border-radius: 10px;
+    letter-spacing: 0.5vw;
+    cursor: pointer;
+}
+
+.ac-game-menu-field-item:hover {
+    transform: scale(1.2);
+    transition: 100ms;
+}
+```
+
+
+
+#### URL
+
+acapp/acapp/urls.py
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('', include('game.urls.index')),
+    path('admin/', admin.site.urls),
+]
+```
+
+
+
+acapp/game/urls/index.py
+
+```python
+from django.urls import path, include
+from game.views.index import index # 从~acapp/game/views/index.py里import一个index函数
+urlpatterns = [
+    path("", index, name="index"), #此处不写东西了
+    path("menu/", include("game.urls.menu.index")),
+    path("playground/", include("game.urls.playground.index")),
+    path("settings/", include("game.urls.settings.index")),
+]
+```
+
+
+
+acapp/game/urls/menu/index.py
+
+```python
+from django.urls import path
+
+urlpatterns = [
+
+]
+```
+
+acapp/game/views/index.py
+
+```python
+from django.shortcuts import render
+
+def index(request):
+    return render(request, "multiends/web.html")
+```
+
+
+
+
+
+前面的页面切换时用链接切换，而在这里我们是在前端渲染，在用户端自己渲染不会跟服务器产生交互。
+
+### 3.11关于前端
 
 
 
@@ -1658,17 +1895,157 @@ class AcGameMenu{
 
 关于JS的小知识：find就是在某个对象内部找class
 
+我们的一般的程序语言变量名用下划线，而html的类一般用杠-
 
-
-
+js是跑在浏览器的高级程序语言，核心思想是对象。
 
 ---
 
-## 4
+## 4创建游戏界面
+
+纯js实现，先实现一个类似ulity3d的引擎。
+
+
+
+我们发现现在生成的game.js里的全局变量，会变成html内部的全局变量，当引入多个js文件的时候，不同的js之间可能存在同名现象，我们最好做一个模块化，jsecm6最新版本支持面向对象，我们可以用模块的方式来重新组织。不用前面的方式了
+
+```html
+<script type= "module">
+	import {AcGame} from "{% static 'js/dist/game.js' %}";
+</script> <!--这样的话就可以把前面的script内容给删了-->
+```
+
+然后记得在acapp/game/static/js/src/zbase.js的`class`关键字前面加上`export` 这样就可以了，注意清空缓存
+
+
+
+然后我们对js做一些基本的修改，只显示游戏界面，方便调试。
+
+
+
+游戏里的动是怎么实现呢？每秒画60张图。我们发现整个游戏，每个物体（小球、火球、地图）都需要每秒画60次，实现一个基类AcGameObject（一个简易的游戏引擎），它的作用是去让每一个物体每一帧都画一次。基类是它的对象，每一帧都会调用它的刷新函数。它是未来所有画面里的class的基类，作用是每一帧都重新渲染
+
+
+
+
+
+
+
+![image-20211219143506519](C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211219143506519.png)
 
 
 
 ## 5部署nginx与对接acapp
+
+把网站对应到https协议，一般来说都需要申请一个https证书，而且这个https证书一般和域名挂钩，极少会出现ip与证书绑定。 搞域名需要备案，
+
+
+
+#### 1、常用端口号
+
+| 网络服务 | 端口号 | 套接字 |
+| -------- | ------ | ------ |
+| FTP数据  | 20     | tcp    |
+| FTP控制  | 21     | tcp    |
+| SSH      | 22     | tcp    |
+| Telnet   | 23     | tcp    |
+| SMTP     | 25     | tcp    |
+| HTTP     | 80     | tcp    |
+| POP3     | 110    | tcp    |
+| HTTPS    | 443    | tcp    |
+| SOCKS    | 1080   | tcp    |
+| DNS      | 53     | udp    |
+| DHCP     | 67     | udp    |
+| TFTP     | 69     | udp    |
+| MySQL    | 3306   |        |
+| Mongodb  | 27017  |        |
+| Tomcat   | 8080   |        |
+| 调试     | 8000   |        |
+
+
+
+#### 2、
+
+1. 增加容器的映射端口：80与443
+第一步，登录容器，关闭所有运行中的任务。
+
+第二步，登录运行容器的服务器，然后执行：
+
+```bash
+docker commit CONTAINER_NAME IMAGE_NAME  # 将容器保存成镜像，将CONTAINER_NAME替换成容器名称
+docker stop CONTAINER_NAME  # 关闭容器
+docker rm CONTAINER_NAME # 删除容器
+
+# 使用保存的镜像重新创建容器
+
+docker run -p 20000:22 -p 8000:8000 -p 80:80 -p 443:443 --name CONTAINER_NAME -itd django_lesson:1.1
+```
+
+
+
+第三步，去云服务器控制台，在安全组配置中开放80和443端口。
+
+注意免密登录是不需要重新配置的，因为container->images
+
+
+
+
+
+#### 3、上线acapp
+
+按照链接内容走一遍即可
+
+
+
+然后启动nginx服务：
+
+```
+sudo /etc/init.d/nginx start
+```
+
+如果报错了，可以重新加载Nginx,这样会提示错误信息
+
+```
+sudo nginx -s reload
+```
+
+此外，看报错信息还可以在/var/log/nginx/error.log里查看
+
+
+
+
+
+y总提供的配置文件里nginx.conf里有内容要修改
+
+```bash
+:1,$s/acs/wangchend/gc        #将全文的word1替换为word2，且在替换前要求用户确认。
+```
+
+
+
+
+
+
+
+注意的是归档操作：
+
+注意我们以前有个疑惑就是，通过这句话：<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211222141018281.png" alt="image-20211222141018281" style="zoom:67%;" />
+
+后，我们在DEBUG =  True的模式下，直接访问ip:port/static就能访问到~/acapp/game/static文件下的内容，我当时还纳闷为什么一个app里的static可以直接对应一个项目的ip地址呢？现在发现，原来是DEBUG  = Ture的原因，我们吧DEBGU置为False，然后则必须把static文件放到~/acapp/目录下才能访问了！！
+
+归档static文件：`python3 manage.py collectstatic`,这样就会自动把static放到~/acapp下了
+
+
+
+
+
+
+
+
+
+以前是8000端口直接访问django。现在我们在django的前面加了层nginx，现在通过443或80端口访问nginx，而nginx和我们的django需要有一个桥梁，这个桥梁就是uwsgi。而且这个访问效率比python3 manage.py runserver效率快很多。
+
+在启动uwsgi服务之前，记得关掉前面的runserver启动的进程。`uwsgi --ini scripts/uwsgi.ini`
 
 
 
