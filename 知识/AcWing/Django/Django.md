@@ -951,19 +951,19 @@ range返回整数区间
 
 ### 10模块
 
-文件内容以及文件结构：
+文件内容以及文件结构：我们以model1/main.py作为将要导入的文件，在model2中书写主文件
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211209203036373.png" alt="image-20211209203036373" style="zoom:50%;" /><img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211209203530895.png" alt="image-20211209203530895" style="zoom: 50%;" />
 
-导入方式1：
+**导入方式1：** 导入到函数级
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211209202518859.png" alt="image-20211209202518859" style="zoom:67%;" />
 
-导入方式2：
+**导入方式2：**导入到文件名级
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211209202550163.png" alt="image-20211209202550163" style="zoom:67%;" />
 
-当我们导入多个模块的时候，并且都用方式2：导入函数，那么就有可能出现不同模块中的函数重名的情况，这个时候我们使用as关键字来解决这个问题。如下所示：
+当我们导入多个模块的时候，并且都用方式1：导入函数，那么就有可能出现不同模块中的函数重名的情况，这个时候我们使用as关键字来解决这个问题。如下所示：
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211209203633383.png" alt="image-20211209203633383" style="zoom:50%;" />
 
@@ -1262,11 +1262,13 @@ Django有一个管理员页面，直接在url后面加上/admin即可访问，�
 
 为了能登录管理员界面，我们需要创建一个管理员账号`python3 manage.py createsuperuser`
 
-记录一个错误：我在执行创建管理员语句的时候，出现了错误：Python 中问题:django.db.utils.OperationalError: no such table: auth_user，解决方法其实就是上面所说的，做一个迁移就好了，[我参考了](https://blog.csdn.net/Moniicoo/article/details/80858129)。
-
 现在我们就创建好了superuser，username：admin,  paswd:123456,
 
 接下来我们就能登录到admin后台了！
+
+记录一个错误：我在执行创建管理员语句的时候，出现了错误：Python 中问题:django.db.utils.OperationalError: no such table: auth_user，解决方法其实就是上面所说的，做一个迁移就好了，[我参考了](https://blog.csdn.net/Moniicoo/article/details/80858129)。
+
+
 
 
 
@@ -1937,6 +1939,8 @@ js是跑在浏览器的高级程序语言，核心思想是对象。
 
 ## 5部署nginx与对接acapp
 
+[讲义](https://www.acwing.com/file_system/file/content/whole/index/content/3257028/)
+
 把网站对应到https协议，一般来说都需要申请一个https证书，而且这个https证书一般和域名挂钩，极少会出现ip与证书绑定。 搞域名需要备案，
 
 
@@ -1950,7 +1954,7 @@ js是跑在浏览器的高级程序语言，核心思想是对象。
 | SSH      | 22     | tcp    |
 | Telnet   | 23     | tcp    |
 | SMTP     | 25     | tcp    |
-| HTTP     | 80     | tcp    |
+| **HTTP** | **80** | tcp    |
 | POP3     | 110    | tcp    |
 | HTTPS    | 443    | tcp    |
 | SOCKS    | 1080   | tcp    |
@@ -1966,7 +1970,7 @@ js是跑在浏览器的高级程序语言，核心思想是对象。
 
 #### 2、
 
-1. 增加容器的映射端口：80与443
+增加容器的映射端口：80与443
 第一步，登录容器，关闭所有运行中的任务。
 
 第二步，登录运行容器的服务器，然后执行：
@@ -1997,15 +2001,15 @@ docker run -p 20000:22 -p 8000:8000 -p 80:80 -p 443:443 --name CONTAINER_NAME -i
 
 
 
-然后启动nginx服务：
+**然后启动nginx服务：**
 
-```
+```bash
 sudo /etc/init.d/nginx start
 ```
 
-如果报错了，可以重新加载Nginx,这样会提示错误信息
+**如果报错了，可以重新加载Nginx,这样会提示错误信息**
 
-```
+```bash
 sudo nginx -s reload
 ```
 
@@ -2031,7 +2035,7 @@ y总提供的配置文件里nginx.conf里有内容要修改
 
 注意我们以前有个疑惑就是，通过这句话：<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211222141018281.png" alt="image-20211222141018281" style="zoom:67%;" />
 
-后，我们在DEBUG =  True的模式下，直接访问ip:port/static就能访问到~/acapp/game/static文件下的内容，我当时还纳闷为什么一个app里的static可以直接对应一个项目的ip地址呢？现在发现，原来是DEBUG  = Ture的原因，我们吧DEBGU置为False，然后则必须把static文件放到~/acapp/目录下才能访问了！！
+后，我们在DEBUG =  True的模式下，直接访问ip:port/static就能访问到~/acapp/game/static文件下的内容，我当时还纳闷为什么一个app里的static可以直接对应一个项目的ip地址加static呢？现在发现，原来是DEBUG  = Ture的原因，我们把DEBGU置为False，然后则必须把static文件放到~/acapp/目录下才能访问了！！这时ip:port/static就对应了 ~/acapp/static了
 
 归档static文件：`python3 manage.py collectstatic`,这样就会自动把static放到~/acapp下了
 
@@ -2043,14 +2047,238 @@ y总提供的配置文件里nginx.conf里有内容要修改
 
 
 
-以前是8000端口直接访问django。现在我们在django的前面加了层nginx，现在通过443或80端口访问nginx，而nginx和我们的django需要有一个桥梁，这个桥梁就是uwsgi。而且这个访问效率比python3 manage.py runserver效率快很多。
+**以前是8000端口直接访问django。现在我们在django的前面加了层nginx，现在通过443或80端口访问nginx，而nginx和我们的django需要有一个桥梁，这个桥梁就是uwsgi。而且这个访问效率比python3 manage.py runserver效率快很多。**
 
-在启动uwsgi服务之前，记得关掉前面的runserver启动的进程。`uwsgi --ini scripts/uwsgi.ini`
-
-
-
-## 6创建账号系统
+在启动uwsgi服务之前，记得关掉前面的runserver启动的进程。**`uwsgi --ini scripts/uwsgi.ini`**
 
 
 
-## 7实现联机对战
+
+
+从此之后，我们启动django项目，就需要**先启动nginx，然后启动uwsgi了**
+
+
+
+
+
+#### 4、改一下bug
+
+发现坐标出现问题了，e.ClientX和Y是整个屏幕的绝对坐标，左上角是00点，而窗口的00坐标不在那，这两个坐标系的起始点是不一样的。
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211222163217377.png" alt="image-20211222163217377" style="zoom: 33%;" />
+
+我们需要把clientXY映射到小坐标系里
+
+```javascript
+this.playground.game_map.$canvas.mousedown(function(e) {
+            const rect = outer.ctx.canvas.getBoundingClientRect();
+            if (e.which === 3) {//keycode 1:左键  2:滚轮 3：右键
+                outer.move_to(e.clientX - rect.left, e.clientY - rect.top);
+                //outer.move_to(e.clientX, e.clientY);//clientXY是API获得点击的坐标,Player的移动，归根到底是画布上的作画，因此我们需要做的是根据鼠标点击目标位置的坐标，更新vx，vy。从而设置Player的坐标
+            } else if (e.which === 1) {//鼠标按左键则触发该事件，触发后先判断是否持有技能，如果持有技能则发送火球！
+                if (outer.cur_skill === "fireball") {
+                    outer.shoot_fireball(e.clientX - rect.left, e.clientY - rect.top); 
+                    // outer.shoot_fireball(e.clientX, e.clientY);
+                }
+
+                outer.cur_skill = null;
+            }
+        });
+```
+
+改完之后记得打包compress，而且要执行`python3 manage.py collectstatic`
+
+上述的两个步骤可以合二为一，也即把`echo yes | python3 manage.py collectstatic`加进compress.py里
+
+
+
+也即如下所示：
+
+```bash
+#! /bin/bash
+
+JS_PATH=/home/wangchend/acapp/game/static/js/
+JS_PATH_DIST=${JS_PATH}dist/
+JS_PATH_SRC=${JS_PATH}src/
+
+# 把src下所有的js文件(注意忽略文件夹和.swp文件) 集中到dist文件夹里的game.js文件
+find ${JS_PATH_SRC} -type f -name '*.js' | sort | xargs cat > ${JS_PATH_DIST}game.js
+
+#下面的命令实现：把~/acapp/game/static复制到~/acapp下，注意该sh文件需要在~/acapp下执行，因为manage.py在那
+echo yes | python3 manage.py collectstatic
+```
+
+
+
+
+
+## 6.1用户密码登录
+
+> **注意:**
+>
+> 数据库的表对应Django的class, 数据库的每一条数据，对应Django的对象。
+
+
+
+为了方便调试，将DeBug 置为True。因为如果不这样的话，假如服务器代码报错，前端只会出现500error，而不显示报错信息。
+
+
+
+### 1、创建数据库表
+
+我前面创建过管理员用户 username:admin psswd:123456,可以在/admin页面下登录，我们发现django给我们提供了一个自带的数据库，它不能满足我们的要求，比如我们想存头像，因此我们需要**扩充**。在models文件夹下去扩充，去创建所有的表。比如Player数据库，它会在admin页面下有图形化显示。
+
+在acapp/game/models/player/player.py写下
+
+```python
+from django.db import models
+from django.contrib.auth.models import User
+
+class Player(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE) #当user删除的时候，怎么处理Player。User一删Player也会删
+    photo = models.URLField(max_length=256, blank=True)
+    #可以接着加年龄、手机号等东西
+    def __str__(self) -> str: #会展示在USERNAME一栏
+        return str(self.user)
+    
+```
+
+如果想让自己定义的数据表出现在后台管理页面的话，我们需要将它注册到管理员页面里。做法：我们进到~/acapp/game/admin.py
+
+```python
+from django.contrib import admin
+from game.models.player.player import Player
+
+admin.site.register(Player)
+
+# Register your models here.
+```
+
+
+
+下面在每一次定义一个数据表之后，需要将它更新到数据库，都要执行两句话：
+
+```python
+python3 manage.py makemigrations
+python3 manage.py migrate
+#注意在项目根目录下执行
+```
+
+然后重新重启下服务 `uwsgi --ini scripts/uwsgi.ini`
+
+然后我们就发现/admin界面下就多了一个Player表，我们可以手动往里加数据
+
+
+
+
+
+### 2、开始
+
+views(函数处理数据) -> urls(路由) -> js调用
+
+
+
+在AcGame函数里加一个参数叫AcWingOS,在acapp端调用会给这个参数赋值
+
+
+
+简单写一下acapp/game/views/settings/getinfo.py
+
+```python
+from django.http import JsonResponse
+from game.models.player.player import Player
+
+def getinfo_acapp(request):
+    player = Player.objects.all()[0]
+    return JsonResponse{[
+        'result': "success",
+        'username': player.user.username,
+        'photo': player.photo
+    ]}
+def getinfo_web(request):
+    player = Player.objects.all()[0]
+    return JsonResponse{[
+        'result': "success",
+        'username': player.user.username,
+        'photo': player.photo
+    ]}
+
+def getinfo(request):
+    platform = request.GET.get('platform')
+    if platform == "ACAPP":
+        return getinfo_acapp(request)
+    else:
+        return getinfo_web(request)
+```
+
+然后写一下路由，进到game/urls/settings/index.py，
+
+```python
+from django.urls import path
+from game.views.settings.getinfo import getinfo
+urlpatterns = [
+    path("getinfo/", getinfo, name="settings_getinfo"), #name 一般写成路径名加函数
+]
+```
+
+然后我们就可以重启一下服务，就可以通过域名/settings/getinfo来访问了
+
+
+
+
+
+### 3、在Menu界面之前，创建一个登陆界面
+
+我们现在把menu hide起来。
+
+
+
+
+
+
+
+44分逻辑讲解
+
+
+
+## 6.2web端AcWing一键登录
+
+
+
+
+
+## 6.3acapp端AcWing一键登录
+
+
+
+## 7.1实现联机对战（上）
+
+
+
+
+
+
+
+## 7.2实现联机对战（下）
+
+
+
+
+
+
+
+## 8实现聊天系统
+
+
+
+
+
+
+
+## 9.1实现匹配系统——thrift服务
+
+
+
+
+
+## 9.2实现匹配系统——项目收尾
