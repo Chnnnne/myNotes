@@ -6,7 +6,7 @@
 
 解决方法
 
-确实跟那个web.xml里的mapping有关，（但是注意 有的web项目根本没有web.xml因为创建项目时可以选择取消创建，因为利用注解就可以完成Servlet的访问设置），因此如果你有web.xml要去web.xml里找错，没的话，就直接查看你写的Servlet实现类的注解有没有问题，注意要带\。    
+确实跟那个web.xml里的mapping有关，（但是注意 有的web项目根本没有web.xml因为创建项目时可以选择取消创建，因为利用注解就可以完成Servlet的访问设置），因此如果你有web.xml要去web.xml里找错，没的话，就直接查看你写的Servlet实现类的注解有没有问题，**注意要带\ **。    
 
 
 
@@ -184,7 +184,7 @@ public class ServletDemo3 extends HttpServlet {
 * 常见的请求头：
 	1. **User-Agent**：浏览器告诉服务器使用的浏览器版本信息
 		* 可以在**服务器端**通过java代码获取该头的信息，解决浏览器的兼容性问题
-  <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200921165858573.png" alt="image-20200921165858573" style="zoom: 43%;" />
+  	<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200921165858573.png" alt="image-20200921165858573" style="zoom: 43%;" />
 	2. Referer：http://localhost/login.html
 		* 告诉服务器，我(当前请求)从哪里来？
 			* 作用：
@@ -207,7 +207,7 @@ public class ServletDemo3 extends HttpServlet {
 
 ```http
 POST /login.html	HTTP/1.1                                         行
-Host: localhost                                            头
+Host: localhost                                            			头
 User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
@@ -216,7 +216,7 @@ Referer: http://localhost/login.html
 Connection: keep-alive
 Upgrade-Insecure-Requests: 1
                                                           空行
-username=zhangsan		                      	请求体
+username=zhangsan		                      	请求体 POST才有
 ```
 
 
@@ -233,7 +233,7 @@ username=zhangsan		                      	请求体
 
 
 
-
+下一节讲
 
 
 
@@ -264,7 +264,7 @@ username=zhangsan			           请求体
 #### 一、request对象和response对象的原理
 
 1. request和response对象是由服务器创建的。我们来使用它们
-2. request对象是来获取请求消息，response对象是来设置响应消息,然后返回给浏览器
+2. request对象是来获取浏览器发过来的请求消息，response对象是来设置响应消息,然后返回给浏览器
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200921213908579.png" alt="image-20200921213908579" style="zoom:80%;" />
 
@@ -289,7 +289,7 @@ org.apache.catalina.connector.RequestFacade 类(tomcat)
 获取请求消息数据（上面所讲的四部分内容）
 ##### 1.获取请求行数据
 
-* 比如 请求行是`GET /day14/demo1?name=zhangsan HTTP/1.1`
+* **比如** 请求行是`GET /day14/demo1?name=zhangsan HTTP/1.1`
 * 方法：
 	1. 获取请求方式 ：GET
 		* String getMethod()  
@@ -297,18 +297,19 @@ org.apache.catalina.connector.RequestFacade 类(tomcat)
 		* **String getContextPath()**
 	3. 获取Servlet路径: /demo1
 		* String getServletPath()
-	4. **获取get方式请求参数**：name=zhangsan
+		* 
+	4. **获取get方式请求参数**：**name=zhangsan**
 		* **String getQueryString()**
 	5. **获取请求URI：/day14/demo1**  (虚拟目录+Servelet路径？)
 		* String getRequestURI():		/day14/demo1
 		* StringBuffer getRequestURL()  :http://localhost/day14/demo1
-
+	
 		* URL:统一资源定位符 ： http://localhost/day14/demo1	中华人民共和国
 		* URI：统一资源标识符 : /day14/demo1					共和国
 	
 	6. 获取协议及版本：HTTP/1.1
 		* String getProtocol()
-
+	
 	7. 获取客户机的IP地址：
 		* String getRemoteAddr()
 
@@ -409,7 +410,7 @@ public class RequestDemo4 extends HttpServlet {
 
 
 
-##### 3.获取请求体数据:
+##### 3.获取请求体数据:POST
 
 * 请求体：**只有POST请求方式，才有请求体，在请求体中封装了POST请求的请求参数**
 * 步骤：
@@ -455,7 +456,7 @@ public class RequestDemo5 extends HttpServlet {
 
 
 
->   以前对于**GET**方式是 通过获取**请求行**中的数据来获得**请求参数**（也即调用 getQueryString()），而对于**POST**方式 是通过**请求体**，调用方法getReader() 来获得**请求参数**。 
+>   以前对于**GET**方式是 通过获取url中的数据来获得**请求参数**（也即调用 getQueryString()），而对于**POST**方式 是通过**请求体**，调用方法getReader() 来获得**请求参数**。 
 >
 > 这样很麻烦 要写两份代码，有了以下的方法之后，只需要写一份就够了(DoGet写一份，然后DoPost直接调用this.DoGet)
 
@@ -678,7 +679,7 @@ public class RequestDemo9 extends HttpServlet {
 
 #### 五、中文乱码问题：
 
-> 背景：通过request对象来获得参数时，英文没问题，中文可能出现乱码
+> 背景：通过request对象来获得参数时，比如request.getParameter 。英文没问题，中文可能出现乱码
 
 * get方式：tomcat 8 已经将get方式乱码问题解决了（如果你用tomcat8以上的版本用get就不会乱码）
 * post方式：会乱码
@@ -735,11 +736,431 @@ public class RequestDemo7 extends HttpServlet {
 
 ### 二、开发步骤
 
+#### 我的新纪录
+
+##### 0软件准备
+
+2022.2.20记录一下：
+
+先在电脑上，安装好java环境，tomcat，idea，mysql（+sqlyog）。配置好tomcat、java、idea、mysql之后，在idea中集成tomcat，可以参考 [这个讲得很好](https://blog.csdn.net/llplllll/article/details/116903198?spm=1001.2101.3001.6650.4&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-4.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-4.pc_relevant_default&utm_relevant_index=9)
+
+之后我们基本的软件都配置好了，下面开始逐步搭建环境。
+
+##### 1.首先完成基本的目录结构创建：
+
+
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220220153837379.png" alt="image-20220220153837379" style="zoom:50%;" />
+
+##### 2导包
+
+开始导入jar包， mysql一个：mysql-connector-java-5.1.37-bin.jar，数据库连接池druid一个：druid-1.0.9.jar，jdbc template五个<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220220154329655.png" alt="image-20220220154329655" style="zoom:50%;" />   然后add as library，作为Module的library。
+
+##### 3创建工具类。
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220220154812764.png" alt="image-20220220154812764" style="zoom:50%;" />
+
+类名文件名是JDBCUtils，然后把代码复制进去,注意我没复制package语句和import语句
+
+```java
+/**
+ * JDBC工具类 使用Durid连接池
+ */
+public class JDBCUtils {
+
+    private static DataSource ds ;
+
+    static {
+
+        try {
+            //1.加载配置文件
+            Properties pro = new Properties();
+            //使用ClassLoader加载配置文件，获取字节输入流
+            InputStream is = JDBCUtils.class.getClassLoader().getResourceAsStream("druid.properties");
+            pro.load(is);
+
+            //2.初始化连接池对象
+            ds = DruidDataSourceFactory.createDataSource(pro);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取连接池对象
+     */
+    public static DataSource getDataSource(){
+        return ds;
+    }
+
+
+    /**
+     * 获取连接Connection对象
+     */
+    public static Connection getConnection() throws SQLException {
+        return  ds.getConnection();
+    }
+
+
+    public static void close(Statement stmt, Connection conn){
+        close(null,null,stmt,conn);
+    }
+
+
+    public static void close(ResultSet rs , PreparedStatement pre, Statement stmt, Connection conn){
+        if(rs != null){
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(pre != null){
+            try {
+                pre.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if(stmt != null){
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(conn != null){
+            try {
+                conn.close();//归还连接
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+}
+
+```
+
+记录一个问题，我在完成这一步时，出现了报错，原因时idea没导包，我们可以自己导一下。
+
+就如下这么多
+
+```java
+import com.alibaba.druid.pool.DruidDataSourceFactory;
+
+import javax.sql.DataSource;
+import javax.xml.crypto.Data;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
+```
 
 
 
 
-**总目录结构**
+
+##### 4Druid配置文件
+
+编写Druid连接池的配置文件，注意是在src目录下。
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220221103251277.png" alt="image-20220221103251277" style="zoom: 50%;" />
+
+内容是
+
+```properties
+driverClassName=com.mysql.jdbc.Driver
+url=jdbc:mysql://127.0.0.1:3306/javaweb
+username=root
+password=root
+initialSize=5
+maxActive=50
+maxWait=3000
+```
+
+
+
+↑以上完成基本环境的搭建了，下面针对需求，进一步完善。
+
+
+
+##### 5数据库、Javabean
+
+数据库
+
+```sql
+CREATE DATABASE webdemo;
+USE webdemo;
+CREATE TABLE USER(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	username VARCHAR(32) UNIQUE NOT NULL,
+	PASSWORD VARCHAR(32) NOT NULL
+);
+
+INSERT INTO USER VALUES(NULL,"wangchen","123456");
+INSERT INTO USER VALUES(NULL,"zhangyujia","234567");
+INSERT INTO USER VALUES(NULL,"xiaoming","345678");
+INSERT INTO USER VALUES(NULL,"xiaohong","456789");
+INSERT INTO USER VALUES(NULL,"xiaolan","567890");
+
+SELECT * FROM USER;
+```
+
+
+
+在domain包下,创建javabean类User。根据标准 成员变量、成员方法都是小驼峰，而类名是大驼峰
+
+```java
+    private int id;
+    private String username;
+    private String password;
+```
+
+由这三个成员域，注意生成getter、setter、tostring、constructor
+
+
+
+##### 6html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LoginPage</title>
+</head>
+<body>
+<form action="/day14_test/loginServlet" method="post">
+    用户名:<input type="text" name="username"> <br>
+    密码:<input type="password" name="password"><br>
+
+    <input type="submit" value="登录">
+
+</form>
+</body>
+</html>
+```
+
+##### 7loginServlet -> SuccessServlet/FailServlet  -> UserDao
+
+```java
+package cn.edu.zju.web.servlet;
+
+import cn.edu.zju.dao.UserDao;
+import cn.edu.zju.domain.User;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * @author WangChen
+ * @create 2022-02-21 11:31
+ * @project: testEmptyProject
+ * @ClassName: ${NAME}
+ */
+
+@WebServlet("/loginServlet")
+public class LoginServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //1.设置编码
+        req.setCharacterEncoding("utf-8");
+        //2.获取请求参数
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        //3.封装user对象
+        User loginUser = new User();
+        loginUser.setUsername(username);
+        loginUser.setPassword(password);
+
+/*        //2.获取所有请求参数
+        Map<String, String[]> map = req.getParameterMap();
+        //3.创建User对象
+        User loginUser = new User();
+        //3.2使用BeanUtils封装
+        try {
+            BeanUtils.populate(loginUser,map);
+            //这样以后loginUser对象就有了 map对象键值对中user和password
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+*/
+        //4.调用UserDao的login方法
+        //user用于创建user对象并封装用户名和密码 ，而dao对象只是用于连接数据库 和验证操作
+        UserDao dao = new UserDao();
+        User user = dao.login(loginUser);
+
+        //5.判断user
+        if(user == null){
+            //登录失败
+            req.getRequestDispatcher("/failServlet").forward(req,resp);
+        }else{
+            //登录成功
+            //存储数据
+            req.setAttribute("user",user);
+            //转发
+            req.getRequestDispatcher("/successServlet").forward(req,resp);
+        }
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.doGet(req,resp);
+    }
+}
+```
+
+```java
+package cn.edu.zju.web.servlet;
+
+import cn.edu.zju.domain.User;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * @author WangChen
+ * @create 2022-02-21 11:32
+ * @project: testEmptyProject
+ * @ClassName: ${NAME}
+ */
+@WebServlet("/successServlet")
+public class SuccessServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //获取request域中共享的user对象
+        User user = (User) request.getAttribute("user");
+
+        if(user != null){
+            //给页面写一句话
+
+            //设置编码
+            response.setContentType("text/html;charset=utf-8");
+            //输出
+            response.getWriter().write("登录成功！"+user.getUsername()+",欢迎您");
+        }
+
+
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request,response);
+    }
+}
+```
+
+```java
+package cn.edu.zju.web.servlet;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * @author WangChen
+ * @create 2022-02-21 11:32
+ * @project: testEmptyProject
+ * @ClassName: ${NAME}
+ */
+@WebServlet("/failServlet")
+public class FailServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //给页面写一句话
+
+        //设置编码
+        response.setContentType("text/html;charset=utf-8");
+        //输出
+        response.getWriter().write("登录失败，用户名或密码错误");
+
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        this.doPost(request,response);
+    }
+}
+```
+
+```java
+package cn.edu.zju.dao;
+
+/**
+ * @author WangChen
+ * @create 2022-02-21 11:36
+ * @project: testEmptyProject
+ * @ClassName: UserDao
+ */
+
+import cn.edu.zju.domain.User;
+import cn.edu.zju.util.JDBCUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+/**
+ * 操作数据库中User表的类
+ */
+public class UserDao {
+    //声明JDBCTemplate对象共用
+    private JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
+
+    /**
+     * 登录方法
+     * @param loginUser 只有用户名和密码
+     * @return user包含用户全部数据,没有查询到，返回null
+     */
+    public User login(User loginUser){
+        try {
+            //1.编写sql
+            String sql = "select * from user where username = ? and password = ?";
+            //2.调用query方法
+            User user = template.queryForObject(
+                    sql,
+                    new BeanPropertyRowMapper<User>(User.class),
+                    loginUser.getUsername(),
+                    loginUser.getPassword()
+            );//对应?
+            return user;
+        } catch (DataAccessException e) {
+            e.printStackTrace();//记录日志
+            return null;
+        }
+    }
+}
+```
+
+
+
+
+
+
+
+#### 老记录
+
+**总目录结构** 可以打开自己看看
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200924195342954.png" alt="image-20200924195342954" style="zoom:67%;" />
 
@@ -760,14 +1181,21 @@ public class RequestDemo7 extends HttpServlet {
 
 
   ```sql
-  CREATE DATABASE day14;
-  USE day14;
+  CREATE DATABASE webdemo;
+  USE webdemo;
   CREATE TABLE USER(
   	id INT PRIMARY KEY AUTO_INCREMENT,
-  username VARCHAR(32) UNIQUE NOT NULL,
-  PASSWORD VARCHAR(32) NOT NULL
+  	username VARCHAR(32) UNIQUE NOT NULL,
+  	PASSWORD VARCHAR(32) NOT NULL
   );
-  //再往里面添加点数据
+  
+  INSERT INTO USER VALUES(NULL,"wangchen","123456");
+  INSERT INTO USER VALUES(NULL,"zhangyujia","234567");
+  INSERT INTO USER VALUES(NULL,"xiaoming","345678");
+  INSERT INTO USER VALUES(NULL,"xiaohong","456789");
+  INSERT INTO USER VALUES(NULL,"xiaolan","567890");
+  
+  SELECT * FROM USER;
   ```
 
 
@@ -820,6 +1248,8 @@ public class JDBCUtils {
 
 
 4.创建包cn.itcast.domain,创建类User
+
+根据标准 成员变量、成员方法都是小驼峰，而类名是大驼峰
 
   ```java
    package cn.itcast.domain;
@@ -972,7 +1402,7 @@ public class UserDao {
    }
    
    ```
-```
+```java
    
    
    
@@ -1026,7 +1456,7 @@ public class UserDao {
 
    
 
-8. login.html中form表单的action路径的写法：虚拟目录+Servlet的资源路径
+#### login.html中form表单的action路径的写法：虚拟目录+Servlet的资源路径
 
 ```html
 <!DOCTYPE html>
@@ -1055,25 +1485,78 @@ public class UserDao {
 
 
 
-9. BeanUtils工具类，简化数据封装
-	* 用于封装JavaBean的
-	1. JavaBean：标准的Java类
-		1. 要求：
-			1. 类必须被public修饰
-			2. 必须提供空参的构造器
-			3. 成员变量必须使用private修饰
-			4. 提供公共setter和getter方法
-		2. 功能：封装数据
+#### BeanUtils工具类，简化数据封装
 
-2. 概念：
-	成员变量：
-	属性：setter和getter方法截取后的产物
-		例如：getUsername() --> Username--> username
+用于封装JavaBean的
 
-3. 方法：
-		1. setProperty()
-		2. getProperty()
-		3. populate(Object obj , Map map):将map集合的键值对信息，封装到对应的JavaBean对象中
+
+
+##### 概念1
+
+JavaBean：标准的Java类
+
+要求：
+1. 类必须被public修饰
+2. 必须提供空参的构造器
+3. 成员变量必须使用private修饰
+4. 提供公共setter和getter方法
+
+功能：封装数据
+
+
+
+##### 概念2
+
+(1)成员变量：
+
+(2)属性：setter和getter方法截取后的产物例如：getUsername() --> Username--> username
+
+成员变量和属性一般而言是相同的
+
+##### 方法：
+
+1. setProperty(javabean对象，javabean对象的某一个属性 string类型，值)  设置属性值
+2. getProperty(javabean对象，某个属性)
+3. populate(Object obj , Map map):将map集合的键值对信息，封装到对应的JavaBean对象中
+
+
+
+##### 例子：
+
+不使用beanutils的代码
+
+```java
+ 		//1.设置编码
+        req.setCharacterEncoding("utf-8");
+        //2.获取请求参数
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        //3.封装user对象
+        User loginUser = new User();
+        loginUser.setUsername(username);
+        loginUser.setPassword(password);
+```
+
+使用beanutils的代码
+
+```java
+		//1.设置编码
+        req.setCharacterEncoding("utf-8");
+		//2.获取所有请求参数
+        Map<String, String[]> map = req.getParameterMap();
+        //3.创建User对象
+        User loginUser = new User();
+        //3.2使用BeanUtils封装
+        try {
+            BeanUtils.populate(loginUser,map);//这样以后loginUser对象就有了 map对象键值对中user和password
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+```
+
+
 
 
 

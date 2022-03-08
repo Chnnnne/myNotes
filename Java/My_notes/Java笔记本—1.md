@@ -137,7 +137,7 @@ $$
 
 }
 
-- 一般的**类的修饰词列表**有<u>public、abstract、final</u> 没有protected 和private 这两个内部类才有的
+- 一般的**类的修饰词列表**有<u>public、abstract、final、默认</u> 没有protected 和private 这两个内部类才有的
 
 - 且一个源文件中只能有一个public类
 
@@ -154,13 +154,40 @@ $$
 
 ## 编译过程
 
+[以下](https://www.cnblogs.com/chengdabelief/p/6576320.html)
 
+JVM是Java平台无关的基础。**JVM负责运行字节码：JVM把每一条要执行的字节码交给解释器，翻译成对应的机器码，然后由解释器执行**。JVM解释执行字节码文件就是**JVM操作Java解释器进行解释执行字节码文件的过程**。
+
+**Java编译器：**将Java源文件（.java文件）编译成字节码文件（.class文件，是特殊的二进制文件，二进制字节码文件），这种字节码就是JVM的“机器语言”。javac.exe可以简单看成是Java编译器。
+
+**Java解释器：**是JVM的一部分。Java解释器用来解释执行Java编译器编译后的程序。java.exe可以简单看成是Java解释器。
+
+
+
+Java[解释器的运行过程解释](https://blog.csdn.net/yangyong0717/article/details/78374236)
 
 [链接](https://zhuanlan.zhihu.com/p/361915411#:~:text=Java%E4%BB%A3%E7%A0%81%E7%BC%96%E8%AF%91%E5%92%8C%E6%89%A7%E8%A1%8C%E7%9A%84%E6%95%B4%E4%B8%AA%E8%BF%87%E7%A8%8B%E5%8C%85%E5%90%AB%E4%BA%86%E4%BB%A5%E4%B8%8B%E4%B8%A4%E4%B8%AA%E9%87%8D%E8%A6%81%E7%9A%84%E6%9C%BA%E5%88%B6%EF%BC%9A%20%E5%88%9B%E5%BB%BA%E5%AE%8C%E6%BA%90%E6%96%87%E4%BB%B6%E4%B9%8B%E5%90%8E%EF%BC%8C%E7%A8%8B%E5%BA%8F%E5%85%88%E8%A6%81%E8%A2%ABJVM%E4%B8%AD%E7%9A%84java%E7%BC%96%E8%AF%91%E5%99%A8%E8%BF%9B%E8%A1%8C%E7%BC%96%E8%AF%91%E4%B8%BA.class%E6%96%87%E4%BB%B6%E3%80%82,.java%E6%96%87%E4%BB%B6%E7%BC%96%E8%AF%91%E6%88%90.class%E6%96%87%E4%BB%B6%E7%9A%84%E8%BF%87%E7%A8%8B%E4%B8%AD%EF%BC%8C%E5%8C%85%E6%8B%AC%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E3%80%81%E5%A1%AB%E5%85%85%E7%AC%A6%E5%8F%B7%E8%A1%A8%E3%80%81%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E3%80%81%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%E4%BB%A5%E5%8F%8A%E7%94%9F%E6%88%90class%E6%96%87%E4%BB%B6%E3%80%82%20%E7%BC%96%E8%AF%91%E5%90%8E%E7%9A%84class%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E4%B8%AD%E4%B8%BB%E8%A6%81%E5%8C%85%E5%90%AB%E4%BA%86%E5%A6%82%E4%B8%8B%E4%BF%A1%E6%81%AF%EF%BC%9A)
 
 [链接2](https://blog.csdn.net/chenlibao0823/article/details/102983756)
 
 ## 命令行
+
+```java
+javac test.java
+java test
+```
+
+当我们在src/model1包下创建java文件时，开头会带一句`package model1`
+
+这时我们需要在src/目录下执行`java model1.test` 才能执行
+
+
+
+
+
+-  **java执行class文件对package的路径是强依赖的。它在执行的时候会严格以当前用户路径为基础，按照package指定的包路径转化为文件路径去搜索class文件。**
+
+
 
 https://blog.csdn.net/ncc1995/article/details/84932759
 
@@ -432,6 +459,10 @@ class zi extends father{
 
 
 
+在继承关系中，在调用函数（方法）或者类中的成员变量时，JVM（JAVA虚拟机）会先检测当前的类（也就是子类）是否含有该函数或者成员变量，如果有，就执行子类中的，如果没有才会执行父类中的
+
+
+
 ---
 
 ## 封装性
@@ -478,7 +509,7 @@ new 父类名（父构的参数列表）
 父类可以是一个**类**（普通类，抽象类）还可以是**接口**
 前者的话要求参数列表与该类的某个构造方法匹配。
 后者的话，因为接口无构造方法，所以参数列表为空。
-注意抽象类和接口要实现全部抽象方法
+注意抽象类和接口要实现全部抽象方法，才能变成一个可用类
 
 匿名内部类中可以定义成员域和成员方法， 
 成员域不能有静态属性，若想有则必须也同时有final属性
@@ -490,9 +521,9 @@ new 父类名（父构的参数列表）
 
 ## 包
 
-- 任何一个java程序中只能用         包语句、import语句、类       三种东西
+- 任何一个java程序中只能用         **包语句、import语句、类**       三种东西
 
-- .java文件只是存源代码，位置在哪里都无所谓，但是.class文件要放到指定文件夹才能被其他.java文件通过import导入软件包，也即导包，导的是class
+- **.java文件只是存源代码，位置在哪里都无所谓，但是.class文件要放到指定文件夹才能被其他.java文件通过import导入软件包**，也即**导包，导的是class**
 
 - javac 命令使用的前提条件是 .java文件要在当前目录下
 
@@ -515,7 +546,7 @@ new 父类名（父构的参数列表）
 **javac  -d  路径名  java文件名**
 
 - .java源代码在当前路径下
-- 路径名指定了一会儿编译后生成的软件包（.class）的根路径  （可以用.代表当前路径）
+- 路径名（事先要存在）指定了一会儿编译后生成的软件包（.class）的**根路径**  （可以用.代表当前路径）
 - 编译之后生成的class文件位于**根路径**下的的 **软件包名多级文件夹**中
 
 
@@ -558,11 +589,11 @@ abstract只能用来修饰*类、接口、成员方法*，而**成员域、构�
 
 public abstract void print(参数);
 
-- 抽象类不一定含有抽象成员方法，但是含有<u>抽象成员方法的类一定是抽象类</u>
+- **抽象类不一定含有抽象成员方法，但是含有<u>抽象成员方法的类一定是抽象类</u>**
   （抽象类中可以有普通成员方法也可以有抽象成员方法，也可以只有普通方法，如适配器？）
-- 若子类没有完全覆盖重写抽象父类的抽象成员方法，则该子类也仍是抽象类
+- **若子类没有完全覆盖重写抽象父类的抽象成员方法，则该子类也仍是抽象类**
 - 抽象类有构造方法，但不能用来创建实体对象
-- 抽象成员方法 注意方法体为空，直接用写一个;
+- 抽象成员方法 注意方法体为空，直接用写一个**;**
 
 
 
@@ -574,19 +605,29 @@ public abstract void print(参数);
 
 **[修饰词] interface  接口名 [extends 接口名]**   注意如果是public 那么.java文件要同名且只有一个public   
 
-- 首先要知道Java语言不允许一个类有多个直接父类，但允许一个类实现多个接口
+- 首先要知道**Java语言不允许一个类有多个直接父类，但允许一个类实现多个接口**
 
 - **接口一定具有抽象abstract属性**，因此在接口修饰词列表中可以不写abstract
 
-接口**无构造方法**
+- 接口**无构造方法**
 
-接口的**成员域 一定具有 public static final 属性**
+- 接口的**成员域 一定具有 public static final 属性**
 
-接口的**成员方法一定具 public abstract属性**
-
-
+- 接口的**成员方法一定具 public abstract属性**
 
 
+
+1.接口可以多继承
+
+2.接口的方法声明必须是 public abstract 即便不写默认也是
+
+3.接口里面不能包含方法具体实现
+
+4.类实继承接口必须实现接口里申明的全部方法，除非该类是抽象类
+
+5.类里面可以声明 public static final 修饰的变量
+
+6.接口不能被实例化，但是可以被实现类创建
 
 
 
@@ -606,15 +647,72 @@ public abstract void print(参数);
 
   所以，在高级语言上，一个类只能继承一个类（抽象类）(正如人不可能同时是生物和非生物)，但是可以实现多个接口(吃饭接口、走路接口)。
 
-- 第一点． 接口是抽象类的变体，接口中所有的方法都是抽象的。而抽象类是声明方法的存在而不去实现它的类。
-- 第二点． 接口可以多继承，抽象类不行
-- 第三点． 接口定义方法，不能实现，而抽象类可以实现部分方法。
+- 第一点． 接口是抽象类的变体，**接口中所有的方法都是抽象的**。而抽象类是声明方法的存在而不去实现它的类。
+- 第二点． **接口可以多继承，抽象类不行**
+- 第三点． **接口定义方法，不能实现，而抽象类可以实现部分方法。**
 - 第四点． 接口中基本数据类型为static 而抽类象不是的。
 
-- <u>当你关注一个事物的本质的时候，用抽象类；当你关注一个操作的时候，用接口。</u>
+- **<u>当你关注一个事物的本质的时候，用抽象类；当你关注一个操作的时候，用接口。</u>**
 
-- 抽象类的功能要远超过接口，但是，定义抽象类的代价高。因为高级语言来说（从实际设计上来说也是）每个类只能继承一个类。在这个类中，你必须继承或编写出其所有子类的所有共性。虽然接口在功能上会弱化许多，但是它只是针对一个动作的描述。而且你可以在一个类中同时实现多个接口。在设计阶段会降低难度的。
-  
+- **抽象类的功能要远超过接口，但是，定义抽象类的代价高。因为高级语言来说（从实际设计上来说也是）每个类只能继承一个类。在这个类中，你必须继承或编写出其所有子类的所有共性。虽然接口在功能上会弱化许多，但是它只是针对一个动作的描述。而且你可以在一个类中同时实现多个接口。在设计阶段会降低难度的。**
+
+
+
+
+
+- \1. 抽象类中的方法可以有方法体，就是能实现方法的具体功能，但是接口中的方法不行。
+- \2. 抽象类中的成员变量可以是各种类型的，而接口中的成员变量只能是 **public static final** 类型的。
+- \3. 接口中不能含有静态代码块以及静态方法(用 static 修饰的方法)，而抽象类是可以有静态代码块和静态方法。
+- \4. 一个类只能继承一个抽象类，而一个类却可以实现多个接口。
+
+> **注**：JDK 1.8 以后，接口里可以有静态方法和方法体了。
+>
+> **注**：JDK 1.8 以后，接口允许包含具体实现的方法，该方法称为"默认方法"，默认方法使用 default 关键字修饰。更多内容可参考 [Java 8 默认方法](https://www.runoob.com/java/java8-default-methods.html)。
+>
+> **注**：JDK 1.9 以后，允许将方法定义为 private，使得某些复用的代码不会把方法暴露出去。更多内容可参考 [Java 9 私有接口方法](https://www.runoob.com/java/java9-private-interface-methods.html)。
+
+
+
+
+
+
+
+#### 接口与类的区别：
+
+- 接口不能用于实例化对象。
+- 接口没有构造方法。
+- 接口中所有的方法必须是抽象方法，Java 8 之后 接口中可以使用 default 关键字修饰的非抽象方法。
+- 接口不能包含成员变量，除了 static 和 final 变量。
+- 接口不是被类继承了，而是要被类实现。
+- 接口支持多继承。
+
+
+
+
+
+#### final
+
+**final 的作用随着所修饰的类型而不同**
+
+1、final 修饰类中的属性或者变量
+
+无论属性是基本类型还是引用类型，final 所起的作用都是变量里面存放的"值"不能变。
+
+这个值，对于基本类型来说，变量里面放的就是实实在在的值，如 1，"abc" 等。
+
+而引用类型变量里面放的是个地址，所以用 final 修饰引用类型变量指的是它里面的地址不能变，并不是说这个地址所指向的对象或数组的内容不可以变，这个一定要注意。
+
+例如：类中有一个属性是 **final Person p=new Person("name");** 那么你不能对 p 进行重新赋值，但是可以改变 p 里面属性的值 **p.setName('newName');**
+
+final 修饰属性，声明变量时可以不赋值，而且一旦赋值就不能被修改了。对 final 属性可以在三个地方赋值：声明时、初始化块中、构造方法中，总之一定要赋值。
+
+2、final修饰类中的方法
+
+作用：可以被继承，但继承后不能被重写。
+
+3、final修饰类
+
+作用：类不可以被继承。
 
 
 
@@ -625,6 +723,12 @@ public abstract void print(参数);
 ## static
 
 static只能用于 成员域 和 成员方法
+
+
+
+
+
+
 
 
 
@@ -651,7 +755,7 @@ static只能用于 成员域 和 成员方法
 
 **一些静态方法**
 
-| String -> 其他            |      |
+| String -> 其他基本类型    |      |
 | ------------------------- | ---- |
 | Boolean.parseBoolean(str) |      |
 | Byte.parseByte(str)       |      |
@@ -699,7 +803,7 @@ Integer.valueof()返回的是Integer的对象。
 
 ## 增强for
 
-增强for循环(也称for each循环)是**JDK1.5**以后出来的一个高级for循环，专门用来遍历数组和集合的。它的内部原理其实是个Iterator迭代器，所以在遍历的过程中，不能对集合中的元素进行增删操作。
+增强for循环(也称for each循环)是**JDK1.5**以后出来的一个高级for循环，专门用来**遍历**数组和集合的。它的内部原理其实是个Iterator迭代器，**所以在遍历的过程中，不能对集合中的元素进行==增删==操作。**
 
 格式：
 
@@ -904,6 +1008,86 @@ finish
 
 
 
+## JVM
+
+### 0、
+
+[参考1：一文搞懂JVM内存结构，好文章](https://blog.csdn.net/rongtaoup/article/details/89142396?spm=1001.2101.3001.6650.14&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-14.highlightwordscore&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-14.highlightwordscore)  其中的局部变量表，操作数栈，Java堆和方法区讲得很好
+
+[参考2【Java千问】你了解Java内存结构么（Java7、8、9内存结构的区别）](https://blog.csdn.net/laomo_bible/article/details/83067810)
+
+[未看](https://www.cnblogs.com/czwbig/p/11127124.html)
+
+
+
+
+
+[JVM有哪些](https://www.zhihu.com/question/29265430?sort=created)
+
+
+
+[未看【JAVA核心】Java GC机制详解](https://blog.csdn.net/laomo_bible/article/details/83112622?spm=1001.2101.3001.6650.12&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBLOGCOLUMN%7Edefault-12.highlightwordscore&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBLOGCOLUMN%7Edefault-12.highlightwordscore)
+
+[未看 通过图文给你讲明白java GC的垃圾回收机制](https://blog.csdn.net/future234/article/details/80677140?spm=1001.2101.3001.6650.10&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-10.opensearchhbase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-10.opensearchhbase)
+
+
+
+
+
+### 1.前言
+
+Java 虚拟机是中、高级开发人员必须修炼的知识，有着较高的学习门槛，很多人都不情愿去接触它。可能是觉得学习成本较高又或者是感觉没什么实用性，所以干脆懒得“搭理”它了。其实这种想法是错误的。举个最简单的例子，JVM 基本上是每家招聘公司都会问到的问题，它们会这么无聊问这些不切实际的问题吗？很显然不是。由 JVM 引发的故障问题，无论在我们开发过程中还是生产环境下都是非常常见的。比如 OutOfMemoryError(OOM) 内存溢出问题，你应该遇到过 Tomcat 容器中加载项目过多导致的 OOM 问题，导致 Web 项目无法启动。这就是JVM引发的故障问题。那到底JVM哪里发生内存溢出了呢？为什么会内存溢出呢？如何监控？最重要的就是如何解决问题呢？能解决问题的技术才是最实用最好的技术。然而你对JVM的内存结构都不清楚，就妄想解决JVM引发的故障问题，是不切实际的。只有基础打好了，对于JVM故障问题才能“披荆斩棘”。本文通过代码与图示详细讲解了JVM内存区域，相信阅读本文之后，你将对JVM内存的堆、栈、方法区等有一个清晰的认知。
+
+#### 2. 运行时数据区
+
+Java 虚拟机在执行 Java 程序的过程中会把它管理的内存划分为若干个不同的数据区域。每个区域都有各自的作用。
+
+分析 JVM 内存结构，主要就是分析 JVM 运行时数据存储区域。JVM 的运行时数据区主要包括：堆、栈、方法区、程序计数器等。而 JVM 的优化问题主要在**线程共享**的数据区中：堆、方法区。
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220108183755966.png" alt="image-20220108183755966" style="zoom: 67%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220109125521430.png" alt="image-20220109125521430" style="zoom: 50%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220109125652483.png" alt="image-20220109125652483" style="zoom:67%;" />
+
+
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220109125857893.png" alt="image-20220109125857893" style="zoom:50%;" />
+
+### 2.1 程序计数器
+
+程序计数器（Program Counter Register）是一块较小的内存空间，可以看作是当前线程所执行字节码的行号指示器，指向下一个将要执行的指令代码，由执行引擎来读取下一条指令。更确切的说，一个线程的执行，是通过字节码解释器改变当前线程的计数器的值，来获取下一条需要执行的字节码指令，从而确保线程的正确执行。
+
+为了确保线程切换后（上下文切换）能恢复到正确的执行位置，每个线程都有一个独立的程序计数器，各个线程的计数器互不影响，独立存储。也就是说程序计数器是线程私有的内存。
+
+如果线程执行 Java 方法，这个计数器记录的是正在执行的虚拟机字节码指令的地址；如果执行的是 Native 方法，计数器值为Undefined。
+
+程序计数器不会发生内存溢出（OutOfMemoryError即OOM）问题。
+
+### **2.2 栈**
+
+#### 2.2.1 局部变量表
+
+帧中，由一个局部变量表存储数据。局部变量表中存储了基本数据类型（boolean、byte、char、short、int、float、long、double）的局部变量（包括参数）、和对象的引用（String、数组、对象等），但是不存储对象的内容。局部变量表所需的内存空间在编译期间完成分配，在方法运行期间不会改变局部变量表的大小。
+
+局部变量的容量以变量槽（Variable Slot）为最小单位，每个变量槽最大存储32位的数据类型。对于64位的数据类型（long、double），JVM 会为其分配两个连续的变量槽来存储。以下简称 Slot 。
+
+JVM 通过索引定位的方式使用局部变量表，索引的范围从0开始至局部变量表中最大的 Slot 数量。普通方法与 static 方法在第 0 个槽位的存储有所不同。非 static 方法的第 0 个槽位存储方法所属对象实例的引用。
+
+
+
+#### 2.2.2 操作数栈
+
+
+
+
+
+### 2.3 Java堆
+
+### **2.4 方法区（Method Area）**
+
+
+
 ## 异常处理
 
 >  背景：一个程序中可能会遇到这样的情况：1、求商时除数为0       2、函数中非法的参数传递     3、想要从文件中读数据，首先要打开该文件，但是打开失败了，这时程序面对这种情况要处理（以前是用if else exit简单处理） 
@@ -1048,7 +1232,7 @@ public void method() throws Exception
 
 
 
-- **原理图**（简言之，传输需要流，而流是对象）
+- **原理图**（简言之，**传输需要流，而流是对象**）
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200406075307945.png" alt="image-20200406075307945" style="zoom: 50%;" />
 
@@ -2135,7 +2319,7 @@ public static void main(String args[ ])
         // 加载驱动程序
          Class.ForName(“com.mysql.jdbc.Driver”);
          // 通过数据源与数据库建立起连接
-          Connection c  =DriverManager.getConnection("jdbc:mysql://localhost:3306/数据库名","用户名", "密码");            
+          Connection c  = DriverManager.getConnection("jdbc:mysql://localhost:3306/数据库名","用户名", "密码");            
          Statement s=c.createStatement( ); // 创建SQL语句对象   
          s.executeUpdate("drop table 学生成绩"); // 删除数据库表: 学生成绩
             s.close( );
@@ -2258,7 +2442,7 @@ public class Demo04 {
 	
 	public static void ChangeArr(char []arry)
 	{
-		arry[0]='$';
+		arry[0]='$';//访问栈中同一区域
 		arry[1]='$';
 		arry[2]='$';
 		arry[3]='$';
@@ -2395,16 +2579,6 @@ public class Main
 
 
 
-## 使用方法对数组排序
-
-```java
-  int[] a={1,4,-1,5,0};
-        Arrays.sort(a);
-        //数组a[]的内容变为{-1,0,1,4,5}  参见note2
-```
-
-
-
 
 
 
@@ -2491,7 +2665,7 @@ Java产生随机数的三种方式
 
 ### 1、Math.random（）方法
 
-Math.random（）方法是 Java 的一个静态方法，返回一个0到1之间，前闭后开区间的double值。
+Math.random（）方法是 Java 的一个静态方法，返回一个0到1之间，前闭后开区间的double值。[0, 1)
 
 ```JAVA
 (int)(Math.random()*10） 返回0到9的随机整数。
@@ -2508,6 +2682,7 @@ Math.random（）方法是 Java 的一个静态方法，返回一个0到1之间�
 Random 类是 Java 的 util 包中的一个类。
 
 一、Random类使用说明
+
 Random类使用的根本策略是分带种子和不带种子的Random的实例。通俗说，两者的区别是：带种子的，每次运行生成的结果都是一样的。不带种子的，每次运行生成的都是随机的，没有规律可言。
 
 **创建不带种子的Random对象**
@@ -2641,6 +2816,10 @@ dedicated		专用的
 
 ### 2、IDEA
 
+#### 2.0可以参考
+
+
+
 #### 2.1idea激活
 
 我是参考了 [网址](https://macstore.info/a/Jetbrainscrack.html?cp=1#comments)，而且可行，另外这个 [网址](https://www.jb51.net/article/186186.htm)方法好像一样， 查看idea的激活日期的方法 可以 看这个[网址](https://blog.csdn.net/malimingwq/article/details/79135762)
@@ -2694,7 +2873,7 @@ Qr7EpuKzNtnTuEmGcLg/YnYyVEcnvR4iflCYTHc6dwuB8Jbx7e6E43CPRA+KjL2O/D/C+hj/rDFrwCNg
 
 
 
-#### 2.1.1 最新激活方式
+2.1.1 最新激活方式
 
 ##### 新的思路方法
 
@@ -2805,6 +2984,22 @@ Jetbrains家的产品有一个很良心的地方，他会允许你试用`30`天�
 |                                |                      |
 |                                |                      |
 
+新快捷键
+
+| 按键                           | 功能                 |
+| ------------------------------ | -------------------- |
+| Alt+ Enter                     | 快速修复             |
+| Alt + /                        | 快速补全             |
+| **Ctrl + Alt + v或者直接.var** | 自动补全变量名称     |
+| Ctrl + N                       | 查找                 |
+| **Ctrl+P**                     | 查看方法所需要的参数 |
+| Ctrl +Alt+t                    | Surround with        |
+| Fn+Alt+delete                  | 构造                 |
+| **iter**                       | 生成一个增强for      |
+| **list.for** fori forr         | 遍历集合             |
+| **a.for** fori forr forEach    | 遍历数组             |
+|                                |                      |
+
 
 
 #### 2.3小知识
@@ -2824,7 +3019,7 @@ eclipse同理，在eclipse的工作区目录下 配置信息存于 .metadata ，
 3、在 Eclipse 中我们有 Workspace（工作空间）和 Project（工程）的概念，在 IDEA 中只有 Project（工程）和 Module（模块）的概念。这里的对应关系为：
  IDEA 官网说明：
  An Eclipse workspace is similar to a project in IntelliJ IDEA ; An Eclipse project maps to a module in IntelliJ IDEA 
-翻译： Eclipse 中 workspace   相当于   IDEA 中的 Project Eclipse 中 Project      相当于   IDEA 中的 Module 
+翻译： Eclipse 中 workspace   相当于   IDEA 中的 Project ,Eclipse 中 Project      相当于   IDEA 中的 Module 
 也即 **eclipse 是 workplace-project-package    而 idea是 project-module-package**
 
 4、从 Eclipse 转过来的人总是下意识地要在同一个窗口管理 n 个项目，这在 IntelliJ IDEA 是无法做到的。IntelliJ IDEA 提供的解决方案是打开多个项目实例， 即打开多个项目窗口。即：一个 Project 打开一个 Window 窗口。
@@ -2835,6 +3030,10 @@ eclipse同理，在eclipse的工作区目录下 配置信息存于 .metadata ，
 solr Module 等等，模块之间彼此可以相互依赖。通过这些 Module 的命名也可
 以看出，他们之间都是处于同一个项目业务下的模块，彼此之间是有不可分割的
 业务关系的。举例： 
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220113101709799.png" alt="image-20220113101709799" style="zoom: 33%;" />
+
+![image-20220113101835001](C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220113101835001.png)
 
 6、help里有find action
 
@@ -2851,6 +3050,56 @@ solr Module 等等，模块之间彼此可以相互依赖。通过这些 Module 
 
 
 
+
+
+
+#### 2.6模板和快捷方式
+
+https://www.cnblogs.com/asio/p/12582328.html#3
+
+
+
+#### 2.7其他
+
+##### 1项目的创建
+
+![image-20220113101835001](C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220113101835001.png)
+
+
+
+
+
+
+
+##### 2IDEA的有关配置目录：
+
+
+
+1、C:\Users\95266\.IntelliJIdea\config
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220114172628296.png" alt="image-20220114172628296" style="zoom: 50%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220114200304078.png" alt="image-20220114200304078" style="zoom:33%;" />
+
+2、<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220114172536355.png" alt="image-20220114172536355" style="zoom:50%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220114172728989.png" alt="image-20220114172728989" style="zoom:50%;" />
+
+
+
+3、<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220114172507432.png" alt="image-20220114172507432" style="zoom:50%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220114172706530.png" alt="image-20220114172706530" style="zoom:50%;" />
+
+
+
+
+
+##### 3.配置文件的导入导出
+
+
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220115112333693.png" alt="image-20220115112333693" style="zoom:50%;" />
 
 # 五、关于JDK
 

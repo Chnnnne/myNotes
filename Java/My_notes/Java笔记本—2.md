@@ -113,7 +113,6 @@ System.out.println(replace); // ITcast ITheima
 ```java
 //将此字符串按照给定的regex（规则）拆分为字符串数组
 public String[] split(String regex)
-
 ```
 
 关于split 的转义字符 以下参考 [CSDN](https://blog.csdn.net/Rex_WUST/article/details/100178494?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase) 
@@ -170,15 +169,17 @@ new出来的不在
 
 [菜鸟教程参考](https://www.runoob.com/java/java-stringbuffer.html)
 
-当对字符串进行修改的时候，需要使用 StringBuffer 和 StringBuilder 类。
+当对字符串进行修改的时候，需要使用 **StringBuffer** 和 **StringBuilder** 类。
 
 和 String 类不同的是，StringBuffer 和 StringBuilder 类的对象能够被多次的修改，并且不产生新的未使用对象。
 
 StringBuilder 类在 Java 5 中被提出，它和 StringBuffer 之间的最大不同在于 StringBuilder 的方法不是线程安全的（不能同步访问）。
 
 1. 由于 **StringBuilder** 相较于 StringBuffer 有**速度**优势，所以多数情况下建议使用 StringBuilder 类。
-
 2. 然而在应用程序要求**线程安全**的情况下，则必须使用 **StringBuffer** 类。
+3. 也即：
+   - 速度快，不安全：StringBuilder
+   - 速度慢，线程安全：StringBuffer
 
 
 
@@ -254,7 +255,7 @@ list.remove(0);
 
 //public E get(int index) 返回指定元素
 list.get(int index)
- 
+
 //public int size()
 list.size();
 ```
@@ -271,14 +272,20 @@ list.size();
 
 ### 3.集合
 
-心得：当容器元素唯一、不重复时，需要重写 存储元素类的equals方法和hashcode方法,当有序时要定义排序规则
+分为单列集合和双列集合
 
 
 
-> - **TreeSet 是有序（自排序）的去重集合，TreeMap 是 key 有序（自排序）的哈希表，它们也是基于红黑树实现的。**  需要重写euqals、 hashcode    、 comparable 或comparator   
-> -  **PriorityQueue是有序（自排序）的队列 ，优先队列**
+心得：当容器元素唯一、不重复时，需要重写存储元素类的equals方法和hashcode方法；当有序时要定义排序规则
+
+
+
+> 拓展：可以自己排序的容器
 >
-> 理解：这些按照指定规则排序的容器有很多，可以重复的就是优先队列，不可重复的就是TreeSet 。键值对的就是TreeMap
+> - **TreeSet 是有序（自排序）的去重集合，TreeMap 是 key 有序（自排序）的哈希表，它们也是基于红黑树实现的。**  需要重写euqals、 hashcode    、 comparable 或comparator   
+> - **PriorityQueue是有序（自排序）的队列 ，优先队列**
+>
+> 理解：这些按照指定规则排序的容器有很多，可以重复的就是优先队列。不可重复的就是TreeSet 。键值对的就是TreeMap
 
 
 
@@ -288,7 +295,7 @@ Collection：单列集合类的根接口，用于存储一系列符合某种规�
 其中，
  List 的特点是元素有序、元素可重复。 
 Set 的特点是元素无 序，而且不可重复。
- List 接口的主要实现类有 java.util.ArrayList 和 java.util.LinkedList ， 
+List 接口的主要实现类有 java.util.ArrayList 和 java.util.LinkedList ， 
 Set 接口 的主要实现类有 java.util.HashSet 和 java.util.TreeSet 。
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200614111048037.png" alt="image-20200614111048037" style="zoom:60%;" />
@@ -374,7 +381,7 @@ poll/offer/
 
 ###### 1.2.2LinedHashset
 
- 元素不可重复，但是有序,也即**插入顺序**
+ 元素不可重复，但是**有序**,也即**插入顺序**
 
 ###### 1.2.3 TreeSet
 
@@ -455,13 +462,17 @@ offer、poll、peek面对满队、空队、空队的情况下不会抛出异常�
 
 目前看来java提供了很多实现了阻塞接口的Queue，还有一些没实现的
 
->  ==就我而言==
+>  ==就我而言== （重要！！）
 >
->  1. **想要用一般队列和栈就用LinkedList  方法分别是push pop peek   和  offer poll peek  **
->  2. **优先队列就用PriorityQueue，**注意要实现Comparable接口并重写对象里的CompareTo，或者再new的时候指定Comparator
+>  1. **想要用一般队列和栈就用LinkedList  方法分别是栈push pop peek   和  队列offer poll peek  **
+>  2. **优先队列就用PriorityQueue，**注意要实现Comparable接口并重写对象里的CompareTo，或者在new的时候指定Comparator
 >  3. **栈Stack代码写的不好，因此不用Stack**   
 
 [更多请参考](https://blog.csdn.net/weixin_30443895/article/details/97976432?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.control)
+
+
+
+
 
 **优先队列**
 
@@ -605,6 +616,7 @@ public class MapDemo02 {
 
         // 获取 所有的 entry对象  entrySet
         Set<Map.Entry<String,String>> entrySet = map.entrySet();
+        //idea中直接entry.for
         for (Map.Entry<String, String> entry : entrySet) {
             String key = entry.getKey();
             String value = entry.getValue();  
@@ -628,31 +640,23 @@ public class MapDemo02 {
 public class Student {
     private String name;
     private int age;
-
-    public Student() {
-    }
-
+    public Student() {}
     public Student(String name, int age) {
         this.name = name;
         this.age = age;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public int getAge() {
         return age;
     }
-
     public void setAge(int age) {
         this.age = age;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -662,7 +666,6 @@ public class Student {
         Student student = (Student) o;
         return age == student.age && Objects.equals(name, student.name);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(name, age);
@@ -823,22 +826,6 @@ public static void main(String[] args) {
 		System.out.println(entry.getKey()+" : "+entry.getValue());
 	}
 ```
-###          4.问题
-
-```java
-		ArrayList<Integer> al = new ArrayList<Integer>();
-		ArrayList<ArrayList<Integer>> arrayList = new ArrayList<ArrayList<Integer>>();
-		al.add(1);
-		al.add(2);
-		al.add(3);
-		arrayList.add(al);
-		System.out.println(arrayList);
-		al.clear();
-		System.out.println(arrayList);
-//add 之后操作al仍对arrayList有效
-引用指向！！！！！
-```
-
 
 
 ## 二、一些常用API
@@ -952,7 +939,7 @@ Collections.addAll(list,1,2,3,4,5,100,300,100000);
 
 
 
-最新实验
+最新实验（1.类实现 2.Lambda）
 
 ```java
 public class Student implements Comparable<Student>{
@@ -978,7 +965,6 @@ public class Student implements Comparable<Student>{
 		
 		Collections.sort(al, (o1,o2)->{return o2.age-o1.age;});//年龄降序
 		System.out.println(al);
-		
 	}
 	
 }
@@ -1035,7 +1021,7 @@ public class CollectionsDemo3 {
 class cmp implements Comparator<Integer>{
     @Override
     public int compare(Integer o1, Integer o2) {
-        return o2-o1;//降序 为什么
+        return o2-o1;//降序
     }
 }
 
@@ -1129,7 +1115,7 @@ System.out.println(Math.nextDown(1.2));//输出1.1999999999999997
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20210122125028008.png" alt="image-20210122125028008" style="zoom:40%;" />
 
 ```java
-//角度180° = 弧度 π
+//角度180° = 弧度 1π
 double sin(double θ)//参数是弧度，返回值是正弦值
 double cos(double θ)
 double tan(double θ)
@@ -1381,7 +1367,7 @@ public class ScannerKeyBoardTest
 
 
 
-#### 4输入输出加速（OJ常用）
+#### 4、输入输出加速（OJ常用）
 
 默写：
 
@@ -1990,9 +1976,9 @@ public class ChangeArgs {
 
 
 
-==lambda的使用处 必须是 **需要函数式接口对象的地方**，== 这个接口可以在方法参数中，可以是方法返回值，也可以创建一个对象时。代码块传递给函数式接口中的抽象方法，从而相当于**形成了一个 接口的实现类对象**
+==lambda的使用处 必须是 **需要函数式接口对象的地方**，== 这个接口对象可以在方法参数中，可以是方法返回值，也可以创建一个对象时。代码块传递给函数式接口中的抽象方法，从而相当于**形成了一个 接口的实现类对象**
 
-由于它的效果等价于<u>匿名内部类</u>，是一个对象，是一个已经重写了函数式接口中唯一抽象方法的类的对象，因此lambda的语句体中也是要完成重写的操作
+由于它的效果等价于<u>匿名内部类</u>，是一个对象，**是一个已经重写了函数式接口中唯一抽象方法的类的对象**，因此lambda的语句体中也是要完成重写的操作
 
 
 
@@ -2335,7 +2321,7 @@ public class Demo04_negate {
 
 **信息筛选例子**
 
-<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200624125337848.png" alt="image-20200624125337848" style="zoom: 50%;" />
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200624125337848.png" alt="image-20200624125337848" style="zoom: 67%;" />
 
  
 
@@ -2437,6 +2423,24 @@ public class Demo02_andThen {
 每当我们需要对集合中的元素进行操作的时候，总是需要进行循环、循环、再循环。这是理所当然的么？不是。循 环是做事情的方式，而不是目的。另一方面，使用线性循环就意味着只能遍历一次。如果希望再次遍历，只能再使 用另一个循环从头开始。
 
 更加关注做什么而不是怎么做
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220119202428054.png" alt="image-20220119202428054" style="zoom:50%;" />
+
+
+
+
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220119215127294.png" alt="image-20220119215127294" style="zoom: 50%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220119215157651.png" alt="image-20220119215157651" style="zoom:50%;" />
+
+
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220119215509218.png" alt="image-20220119215509218" style="zoom:50%;" />
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220119224045705.png" alt="image-20220119224045705" style="zoom:50%;" />
+
+
 
 
 
@@ -2575,7 +2579,23 @@ public class TryDemo {
 
 ## 其他
 
+### 有关引用的问题
 
+```java
+	ArrayList<Integer> al = new ArrayList<Integer>();
+	ArrayList<ArrayList<Integer>> arrayList = new ArrayList<ArrayList<Integer>>();
+	al.add(1);
+	al.add(2);
+	al.add(3);
+	arrayList.add(al);
+	System.out.println(arrayList);
+	al.clear();
+	System.out.println(arrayList);
+```
+//add 之后操作al仍对arrayList有效
+引用指向！！！！！
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220120103136374.png" alt="image-20220120103136374" style="zoom: 67%;" />
 
 
 
@@ -2583,30 +2603,32 @@ public class TryDemo {
 
 ```java
 public static void main(String[] args) {
-
         HashSet<String> set = new HashSet<>();
         set.add("abc");
         set.add("cde");
 
         HashMap<Character, HashSet<String>> map = new HashMap<>();
-        map.put('a',set);
-        for(Character c:map.keySet()){
-            System.out.println("key:"+c+"          value:"+map.get(c));
-        }
+        map.put('a',set);//加入
+        map.keySet().forEach(s-> System.out.println(s+":"+map.get(s)));
 
         HashSet<String> aset = map.get('a');
-        aset.add("this is new");
+        aset.add("this is new");//修改
 
         for(Character c:map.keySet()){
-            System.out.println("key:"+c+"          value:"+map.get(c));
+            System.out.println("key:"+c+"   value:"+map.get(c));
         }
+        System.out.println(set);
+        set.add("newest");//修改
+        map.keySet().forEach(s-> System.out.println(s+":"+map.get(s)));
     }
 ```
 
 > Output：
 >
-> key:a          value:[abc, cde]
-> key:a          value:[abc, this is new, cde]
+> a:[abc, cde]
+> key:a   value:[abc, this is new, cde]
+> [abc, this is new, cde]
+> a:[abc, this is new, cde, newest]
 
 
 

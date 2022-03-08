@@ -130,7 +130,15 @@ cat 文件名、 more 文件名  按q退出 按空格一帧 回车一行
 
 
 
+### rpm
 
+redhat package manager
+
+ [CentOS7](https://so.csdn.net/so/search?q=CentOS7&spm=1001.2101.3001.7020)主要有rpm和yum这两种包软件的管理。两种包的管理各有用处，其中主要区别是：YUM使用简单但需要联网，YUM会去网上的YUM包源去获取所需要的软件包。而RPM的需要的操作经度比较细，需要我们做的事情比较多。
+
+[rpm](https://so.csdn.net/so/search?q=rpm&spm=1001.2101.3001.7020)是以一种数据库记录的方式来将所需要的套件安装在Linux主机的一套管理程序。也就是说Linux系统中存在一个关于rpm的数据库，它记录了安装的包与包之间的依赖相关性。rpm包是预先在Linux主机上编译好并打包的文件，安装起来非常快捷。
+
+### yum
 
 
 
@@ -150,6 +158,10 @@ cat 文件名、 more 文件名  按q退出 按空格一帧 回车一行
 
 
 
+我们移植时，可以移植.tmux.conf   .vimrc   .bashrc   .gitconfig
+
+
+
 ## 六、问题解答
 
 #### 1.sudo cd
@@ -157,6 +169,81 @@ cat 文件名、 more 文件名  按q退出 按空格一帧 回车一行
 sudo 是一种程序，用于提升用户的权限，在[linux](https://so.csdn.net/so/search?from=pc_blog_highlight&q=linux)中输入sodu就是调用这个程序提升权限，shell是一个命令解析器，sudo cd是错误的，因为cd是shell内置的，不是系统里面的，sudo可以运行系统带的命令，但无法用系统中一个软件中的命令。
 
 cd是shell的内部命令。所谓shell是一个交互式的应用程序。shell执行外部命令的 时候，是通过fork/exec叉一个子进程，然后执行这个程序。sudo的意思是，以别人的权限叉起一个进程，并运行程序。而cd是内部命令，也就是说，是直接由shell运行的，不叉子进程。你在当前进程里当然不能提升进程的权限（其实也可以，不过得编程的时候写到代码里，然后再编译，而我们的 shell没有这个功能，否则岂不是太危险了？）
+
+
+
+
+
+#### 2、CentOS6 ，yum无法使用
+
+```bash
+清理缓存 
+ # yum clean all  
+ 更新缓存
+ # yum makecache
+```
+
+
+
+参考[1](https://blog.csdn.net/weixin_44343282/article/details/113544092)
+
+参考[2](https://blog.csdn.net/qq_39946015/article/details/111086184?spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-5.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-5.pc_relevant_default&utm_relevant_index=9)
+
+[最终参考yum源](https://www.cnblogs.com/hixiaowei/p/15930453.html)
+
+
+
+## 七、有关防火墙
+
+[iptables和firewall详解](https://www.cnblogs.com/wdp-home/p/11651855.html)
+
+[浅析Firewalld与Iptables](https://blog.csdn.net/lilygg/article/details/84981537)
+
+
+
+#### firewalld
+
+```bash
+# 开启
+service firewalld start
+# 重启
+service firewalld restart
+# 关闭
+service firewalld stop
+# 查看防火墙规则
+firewall-cmd --list-all
+# 查询端口是否开放
+firewall-cmd --query-port=8080/tcp
+# 开放80端口
+firewall-cmd --permanent --add-port=80/tcp
+# 移除端口
+firewall-cmd --permanent --remove-port=8080/tcp
+#重启防火墙(修改配置后要重启防火墙)
+firewall-cmd --reload
+# 参数解释
+1、firwall-cmd：是Linux提供的操作firewall的一个工具；
+2、--permanent：表示设置为持久；
+3、--add-port：标识添加的端口；
+```
+
+#### iptables
+
+```bash
+service network status 	查看指定服务的状态
+service network stop 	停止指定服务
+service network start 	启动指定服务
+service network restart 重启指定服务
+
+service --status–all 	查看系统中所有后台服务
+netstat –nltp 			查看系统中网络进程的端口监听情况
+
+防火墙设置
+防火墙根据配置文件/etc/sysconfig/iptables来控制本机的”出”、”入”网络访问行为。
+service iptables status 查看防火墙状态
+service iptables stop 关闭防火墙
+service iptables start 启动防火墙
+chkconfig  iptables off 禁止防火墙自启
+```
 
 
 
@@ -405,9 +492,9 @@ mv到本地就是重命名
 
 #### touch
 
+touch a.txt
 
-
-
+创建文件
 
 
 
@@ -492,7 +579,7 @@ cat [-AbeEnstTuv] [--help] [--version] fileName
         方向键 —— 下：选择下一项 session/window/pane
         方向键 —— 右：展开当前项 session/window
         方向键 —— 左：闭合当前项 session/window
-    (13) 按下Ctrl + a后手指松开，然后按c：*在当前session中创建一个新的window。*
+    (13) 按下Ctrl + a后手指松开，然后按c：*在当前session中创建一个新的window。* ,不常用，因为我们通常使用session-panel结构
     (14) 按下Ctrl + a后手指松开，然后按w：选择其他window，操作方法与(12)完全相同。
     (15) 按下Ctrl + a后手指松开，然后按PageUp：翻阅当前pane内的内容。
     (16) 鼠标滚轮：翻阅当前pane内的内容。
@@ -526,11 +613,11 @@ Ctrl a + s
 Ctrl a + w
 
 7、创建window
-Ctrl a + c  在当前session中创建一个新的window。
+Ctrl a + c  在当前session中创建一个新的window。  不常用
 
 8、创建小结
 创建session 要 ctrl a + d挂起后，然后输入tmux再创建
-创建window ctrl a + c
+创建window ctrl a + c            不常用
 创建panel 直接ctrl a + % "
 
 9、其他
@@ -655,7 +742,7 @@ y总推荐做法：
 >
 > 2、对于变量使用，我们要加\$；
 >
-> 3、对于表达式求值，我们要用expr,但是要注意expr计算后的表达式的值输出在stdout里，我们要用\$()来得到值，才能进一步应用，或者用\`\`来获得（截获stdout），此外就是如果参与表达式的变量是数字的话，不用加引号。如果是字符串的话，最好加上" "，防止字符串包含空格  如
+> 3、对于表达式求值，我们要用expr,但是要注意expr计算后的表达式的值输出在stdout里，我们要用\$()来得到值，才能进一步应用，或者用\`\`来获得（**截获**stdout），此外就是如果参与表达式的变量是数字的话，不用加引号。如果是字符串的话，最好加上" "，防止字符串包含空格  如
 >
 > ```bash
 > `expr length "$str"` 等价于 ${#str}
@@ -900,6 +987,8 @@ echo "hello, $name \"hh\""  # 双引号字符串，输出 hello, yxc "hh"
 ```bash
 name="yxc"
 echo ${#name}  # 输出3
+//也可以
+ echo `expr length name`
 ```
 
 提取子串
@@ -987,7 +1076,7 @@ echo ${name:0:5}  # 提取从0开始的5个字符
 
 ```bash
 $?				上一条命令的退出状态（注意不是stdout，而是exit code）。0表示正常退出，其他值表示错误
-$(command)		返回command这条命令的stdout（可嵌套）
+$(command)		返回command这条命令的stdout（可嵌套）    截获
 `command`		返回command这条命令的stdout（不可嵌套）
 ```
 
@@ -1043,6 +1132,20 @@ read -p "Please input your name: " -t 30 name
 ---
 
 ### 10、[test命令与判断符号](https://www.acwing.com/blog/content/9704/)
+
+
+
+我们只用test命令或[]做判断，也即只配合if使用，因此知识点就很少了，只需要知道下面的例子即可
+
+```bash
+[ 2 -lt 3 ] 
+test $a -eq $b  # a是否等于b
+test -r filename  # 判断文件是否可读
+```
+
+
+
+
 
 test命令与判断符号[]
 
@@ -1419,7 +1522,7 @@ yxc
 | command n> file  | 将文件描述符n重定向到file中           |
 | command n>> file | 将文件描述符n以追加方式重定向到file中 |
 
-==说明：文件的重定向，无所谓前后。它的一般形式是 `>或< + 文件名`==
+==说明：文件的重定向，无所谓前后。它的一般形式是 `>或< + 文件名`，我们可以记成 < 就是读入， > 就是写==
 	
 
 ```bash
@@ -1542,6 +1645,8 @@ done
 
 ## 4、ssh
 
+#### 0、其他
+
 本地终端、云端终端
 
 ssh默认端口是22
@@ -1572,13 +1677,27 @@ scp：将本地和服务器的文件可以进行传输
 
 
 
+
+
+#### 1、简化原理
+
+格式:`ssh username@hostname`
+
+**1   简化1**： 《别名配置》，在本机~/.ssh/config下配置别名登录
+
+**2    简化2**：《免密登录》，也即秘钥登录，原理：在本机通过`ssh-keygen`生成公钥和秘钥，然后把公钥传给免密登录的机器（具体在~/.ssh/authorized_keys）。也即我们可以把公钥理解成一个信任卡，发给谁，本机就信任谁，就不用输密码了。
+
+**这样简化之后，我们本机就可以通过别名免密访问服务器了！**
+
+
+
 也可以使用如下命令一键添加公钥：
 
 ssh-copy-id myserver1（本地terminal执行，还要输入密码）
 
 
 
-
+#### 2、远程执行命令
 
 ```bash
 ssh user@hostname command
@@ -1590,22 +1709,20 @@ ssh user@hostname command
 
 
 
-```bash
-scp -r ~/tmp myserver:/home/acs/
-```
-
-注意-r放在前面！！！
 
 
+#### 3、scp
 
-复制文件夹：
-
-```bash
-scp -r ~/tmp myserver:/home/acs/
-```
 
 
 将本地家目录中的tmp文件夹复制到myserver服务器中的/home/acs/目录下。
+
+```bash
+scp -r ~/tmp myserver:/home/acs/  # 注意-r放在前面！！！
+```
+
+
+
 
 
 
@@ -1613,7 +1730,7 @@ scp -r ~/tmp myserver:/home/acs/
 scp -r ~/tmp myserver:homework/
 ```
 
-将本地家目录中的tmp文件夹复制到myserver服务器中的~/homework/目录下。 因此myserver中有用户的信息
+
 
 
 
@@ -1639,8 +1756,8 @@ scp -P 22 source1 source2 destination
 ### 一个毛坯服务器怎么改造：
 
 1. 下载tmux，下载vim
-2. 在terminal里，~/.ssh/文件夹下的config文件添加自己的服务器ip以及用户名密码 （起别名）
-3. 通过ssh-keygen命令生成公钥和私钥，把公钥复制到服务器中（可以直接复制，也可以使用命令）（免密）
+2. 在terminal里，~/.ssh/文件夹下的config文件添加自己的服务器ip以及用户名密码 （ **1起别名**）
+3. 通过ssh-keygen命令生成公钥和私钥，把公钥复制到服务器中（可以直接复制，也可以使用命令）**（免密）**
 4. 然后就可以免密别名直接登录服务区了。
 5. 把y总的旷世配置文件scp进自己的服务器里，也即.vimrc和.tmux.conf
 
@@ -1729,7 +1846,7 @@ ssh myserver mkdir "homework/lesson_4/homework_4/\"$1\"" #等价
 
 ### 二、命令
 
-#### 1、git diff
+#### 1、git diff 不懂
 
 ```bash
 git diff 文件名 #查看当前文件与缓冲区的区别，也即工作区的文件与缓冲区的文件的区别
@@ -1745,7 +1862,7 @@ https://blog.csdn.net/wq6ylg08/article/details/88798254
 ```bash
 git rm --cached 文件名 	  # 将文件从仓库索引目录中删掉,不会再管理该文件
 git restore --staged 文件名 	#把暂存区的文件从暂存区撤出，也即撤销了add操作
-git restore 文件名 / git checkout 文件名#将XX文件尚未加入暂存区的修改全部撤销,也即将工作区的代码回滚成暂存区里的版本，如果暂存区为空的话，则工作区的内容回滚到HEAD所指版本的样子。
+git restore 文件名 / git checkout 文件名	#将XX文件尚未加入暂存区的修改全部撤销,也即将工作区的代码回滚成暂存区里的版本，如果暂存区为空的话，则工作区的内容回滚到HEAD所指版本的样子。
 
 #每次commit都是有意义的
 ```
@@ -1792,7 +1909,37 @@ git log打印从空节点到当前节点的路径（HEAD指向的点)，从下�
 
 
 
+#### 4、常用命令
 
+git init
+
+git add
+
+git commit
+
+git restore --staged 文件名 	#把暂存区的文件从暂存区撤出，也即撤销了add操作
+
+git restore 文件名 / git checkout 文件名	
+
+git status           st
+
+git log                lg
+
+git remote add origin git@git.acwing.com:xxx/XXX.git
+
+git push origin branch_name
+
+git pull origin branch_name
+
+git branch branch_name：创建新分支
+
+git branch -d branch_name：删除本地仓库的branch_name分支
+
+git branch：查看所有分支和当前所处分支
+
+git checkout branch_name：切换到branch_name这个分支
+
+git merge branch_name：将分支branch_name合并到当前分支上
 
 
 
@@ -1995,7 +2142,7 @@ git stash list	#查看栈中所有元素
 
 我在一个新的电脑上，建了一个新git仓库，怎样把仓库push到云端呢？
 
-1. 完成本地git的创建工作（  init add commit）
+1. 完成本地git的创建工作（ 创建文件然后 init add commit）
 2. 在新电脑上通过ssh-keygen 生成秘钥和公钥 （Linux/Mac 系统 在 ~/.ssh 下，win系统在 /c/Documents and Settings/username/.ssh 下）
 3. 在网站内添加ssh公钥 （**添加ssh公钥之后，本地服务器访问云端服务器（我的账号所在的服务器）就可以不用密码访问了**）
 4. 在云端新建仓库(图形化界面)
@@ -2014,7 +2161,7 @@ git stash list	#查看栈中所有元素
 
 #### 2、clone
 
-clone一个项目前，也需要ssh公钥秘钥生成、添加那一套流程。
+我们在本机，想clone一个别人的项目前，也需要ssh公钥秘钥生成、添加那一套流程。
 
 
 
@@ -3052,7 +3199,7 @@ thrift -version //若正常输出Thrift的版本则证明安装完成
 
 也即：==将|前的命令的stdout           传给->     |后命令的stdin==
 
-命令1| 命令2
+格式： 命令1| 命令2
 
 ---
 
@@ -3068,7 +3215,7 @@ thrift -version //若正常输出Thrift的版本则证明安装完成
 
 - 文件重定向左边为命令，右边为文件。
 
-- 管道左右两边均为命令，左边有stdout，右边有stdin。
+- 管道左右两边均为命令，左边有stdout，右边需要有stdin来接收。
 
 - 文件重定向：
 
@@ -3093,7 +3240,7 @@ find . -name '*.py' | xargs cat | wc -l
 ```bash
 1、find /path/to/directory/ -name '*.py'   #搜索某个文件路径下的所有*.py文件
 
-2、xargs  # 将stdin中的数据用空格或回车分割成命令行参数传给命令，也即stdin->命令参数 。**也即把stdin的内容接到xargs后面的命令的后面!!!!**
+2、xargs  # 将stdin中的数据用空格或回车分割成命令行参数传给命令，也即stdin->命令参数 。**也即把stdin的内容接到xargs后面的命令的后面!!!!**  也即把从stdin接收到的stdout的内容变化成参数传递给后面的命令
 
 3、比如cat命令，它接受标准输入stdin就直接输出到stdout了，没啥用。但若接受命令行参数，则把文件里的内容展示出来
 
@@ -3103,6 +3250,9 @@ find . -name '*.py' | xargs cat | wc -l
  -c：统计字节数
  
 5、标准输入 和 命令参数
+
+
+6、find . -name '*.py' | cat   等价于   find . -name '*.py' 
 ```
 
 ---
@@ -3154,13 +3304,13 @@ find . -name '*.cpp' | xargs wc -l #结果是10\n 10\n 10\n 10\n
 
 #### **概念**
 
-Linux系统中会用很多环境变量来记录配置信息。
+Linux系统中会用很多**环境变量**来记录**配置信息**。
 
-环境变量类似于全局变量，可以被各个进程访问到。我们可以通过修改环境变量来方便地修改系统配置。
+环境变量类似于**全局变量**，可以被各个进程访问到。我们可以**通过修改环境变量来方便地修改系统配置**。
 
-配置存储到环境变量里：如HOME、PATH
+配置可以存储到环境变量里：如HOME、PATH
 
-配置存储到文件里：cpuinfo存储在/proc/cpuinfo里
+配置可以存储到文件里：如cpuinfo存储在/proc/cpuinfo里
 
 ---
 
@@ -3184,10 +3334,10 @@ echo $PATH
 
 #### 修改
 
-环境变量的定义、修改、删除操作可以参考3. shell语法——变量这一节的内容。
+环境变量的定义、修改、删除操作可以参考    3. shell语法——变量这一节的内容。
 
-为了将对环境变量的修改应用到未来所有环境下，可以将修改命令放到~/.bashrc文件中。
-修改完~/.bashrc文件后，记得执行source ~/.bashrc，来将修改应用到当前的bash环境下。
+为了将对环境变量的修改应用到未来所有环境下，可以**将修改命令放到~/.bashrc文件**中。
+修改完~/.bashrc文件后，记得执行**source ~/.bashrc**，来将修改应用到当前的bash环境下。
 
 为何将修改命令放到~/.bashrc，就可以确保修改会影响未来所有的环境呢？
 
@@ -3246,19 +3396,25 @@ echo $PATH
 
 
 
+第一个位置：
+d 目录
+l 链接
+-其他
 
-
-
+r w x
+4 2 1
 
 
 
 #### 文件检索
 
 1. **find** /path/to/directory/ -name '\*.py'：搜索某个文件路径下的所有*.py文件
+   如 `find . -name "*.cpp"`
 
 2. **grep** xxx：从stdin中读入若干行数据，如果某行中包含xxx，则输出该行；否则忽略该行。
 
 3. **wc**：统计行数、单词数、字节数
+   
    - 既可以从**stdin**中直接读入内容；也可以在**命令行参数**中传入文件名列表；
    - 区别是stdin是直接统计，而命令行是统计**每个**文件内容
    - 不加参数，展示行数、单词数、字节数
@@ -3371,6 +3527,14 @@ history：展示当前用户的历史操作。内容存放在~/.bash_history中
 
 
 
+![image-20220305113037309](C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220305113037309.png)
+
+
+
+
+
+
+
 #### 例子
 
 ##### 例1
@@ -3451,7 +3615,7 @@ kill SIGKILL PID 或 kill -9 PID
 假如我们现在是考官（出卷者），我们通过哈希的方法就能完成：
 
 1. 不让学生看答案
-2. 同时可评测
+2. 学生同时可评测
 
 
 
@@ -3469,7 +3633,7 @@ kill SIGKILL PID 或 kill -9 PID
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20211122201955278.png" alt="image-20211122201955278" style="zoom: 33%;" />
 
-我们租到的服务器可以分为两大类毛坯服务器和提供一些服务的服务器（比如cdn、mysqll、redis，直播等等）
+我们租到的服务器可以分为两大类，毛坯服务器和提供一些服务的服务器（比如cdn、mysqll、redis，直播等等）
 
 一般来说，毛坯服务器上跑框架、thrift。可定制化强
 
@@ -3555,7 +3719,7 @@ Host myserver1
 
 11. 安装tmux: `sudo apt-get install tmux`, Y ,完成，此时的tmux是原始tmux，没有经过改造。
 
-12. 改造tmux、vim、bash：先Ctrl+D回到AcTreminal， `scp .bashrc .vimrc .tmux.conf myserver1:`。回车，这样就把tmux、vim、bash的配置文件传到了云端服务器。这样以后就完成了配置。
+12. 改造tmux、vim、bash：先Ctrl+D回到AcTreminal， `scp .bashrc .vimrc .tmux.conf .gitconfig myserver1:`。回车，这样就把tmux、vim、bash,git的配置文件传到了云端服务器。这样以后就完成了配置。
 
 13. 打开tmux，以后的工作都在tmux中完成，防止进度丢失。
 
@@ -3651,20 +3815,20 @@ sudo usermod -aG docker $USER
 
 #### 容器(container)
 
-1. docker [container] create -it ubuntu:20.04：**利用镜像ubuntu:20.04创建一个容器**。
+1. docker [container] **create** -it ubuntu:20.04：**利用镜像ubuntu:20.04创建一个容器**。
 2. docker ps -a：查看本地的所有容器
    - 不加-a是查看正在运行的，加上之后可以看到所有的容器，包括刚创建但未运行的
-3. docker [container] start CONTAINER：启动容器
+3. docker [container] **start** CONTAINER：启动容器
    - 可以是id，可以是name
-4. docker [container] stop CONTAINER：停止容器
-5. docker [container] restart CONTAINER：重启容器
-6. docker [contaienr] run -itd ubuntu:20.04：创建并启动一个容器
+4. docker [container] **stop** CONTAINER：停止容器
+5. docker [container] **restart** CONTAINER：重启容器
+6. docker [contaienr] **run** **-itd** ubuntu:20.04：创建并启动一个容器
    - 加上d，创建并启动。不加d，会创建启动并进去。
 7. docker [container] attach CONTAINER：进入容器
    - **先按Ctrl-p，再按Ctrl-q可以挂起容器**，用的不多，因为后面就ssh登录了
    - Ctrl + d 也能退出容器，但是这样会把容器关掉
 8. docker [container] exec CONTAINER COMMAND：在容器中执行命令
-9. docker [container] rm CONTAINER：删除容器
+9. docker [container] **rm** CONTAINER：删除容器
 10. docker container prune：删除所有已停止的容器
 11. docker export -o xxx.tar CONTAINER：**将容器CONTAINER导出到本地文件xxx.tar中**
 12. docker import xxx.tar image_name:tag：将本地文件xxx.tar导入成镜像，并将镜像命名为image_name:tag
@@ -3677,7 +3841,7 @@ sudo usermod -aG docker $USER
 15. docker stats：查看所有容器的统计信息，包括CPU、内存、存储、网络等信息
 16. docker cp xxx CONTAINER:xxx 或 docker cp CONTAINER:xxx xxx：在本地和容器间复制文件
     - 不用加 -r
-17. docker rename CONTAINER1 CONTAINER2：重命名容器
+17. docker **rename** CONTAINER1 CONTAINER2：重命名容器
 18. docker update CONTAINER --memory 500MB：修改容器限制
 
 官网的搜索框很好用，什么命令不懂可以直接插，比如不懂update，直接在官网搜`docker update`
@@ -3689,6 +3853,8 @@ sudo usermod -aG docker $USER
 
 
 #### 实战
+
+##### y总笔记
 
 进入AC Terminal，然后：
 
@@ -3726,7 +3892,7 @@ root用户不能修改密码，只能设置密码，因为权利很大
 
 ---
 
-##### 我的详细记录△：
+##### 我自己的详细记录△：
 
 能自动补全，说明命令写的没问题，不能则有问题
 
@@ -3746,7 +3912,7 @@ passwd  # 设置root密码
 Ctrl + p  Ctrl + q#退出
 
 #进入到了腾讯云
-ssh root@localhost -p 20000  #试一下从腾讯云进入到腾讯云里的container
+ssh root@localhost -p 20000  #试一下从腾讯云服务器进入到腾讯云里的container
 Ctrl + d #断开ssh连接
 
 #记得在腾讯云官网的安全组里放行20000端口
@@ -3801,7 +3967,7 @@ sudo apt-get install tmux
 
 #然后把祖传文件传到container里
 Ctrl+D#回到ACTerminal
-scp .bashrc .vimrc .tmux.conf myserver1_docker:
+scp .bashrc .vimrc .tmux.conf .gitconfig myserver1_docker:
 ```
 
 
@@ -3812,8 +3978,14 @@ scp .bashrc .vimrc .tmux.conf myserver1_docker:
 
 ---
 
-小结：
+#### 其他
 
 从container退出到云服务器里是Ctrl + p、q    用的不多
 
 断开ssh连接是 Ctrl + D  ，牢记 x
+
+
+
+![image-20220303171140770](C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220303171140770.png)
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220303171151381.png" alt="image-20220303171151381" style="zoom:50%;" />

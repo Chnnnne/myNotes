@@ -1,3 +1,80 @@
+> 循序渐进： 
+>
+> 
+>
+> 1、JDBC
+>
+> 思路：我们希望通过统一的java代码规范，代码语言，来调用不同的数据库，因此我们需要定义规则叫做叫做jdbc，*（JDBC本质：其实是官方（sun公司）定义的一套操作所有**关系型数据库**的规则，即**接口**。**各个数据库厂商去实现这套接口，提供数据库驱动jar包**。我们可以使用这套接口（JDBC）编程，**真正执行的代码是驱动jar包中的实现类**。）*
+>
+> 因此我们需要导我们所使用的数据的包，比如mysql-connector-java-5.1.37-bin.jar
+>
+> 这样以后，我们就可以通过如下的步骤和代码来实现连接数据库了.
+>
+> <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220210221317274.png" alt="image-20220210221317274" style="zoom: 50%;" />
+>
+> ```java
+> Class.forName("com.mysql.jdbc.Driver");    //把这个类的字节码文件加载进内存了并且完成了注册驱动
+> Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db3", "root", "root");
+> String sql = "update account set balance = 500 where id = 1";    //注意不要加分号
+> Statement stmt = conn.createStatement();
+> int count = stmt.executeUpdate(sql);
+> System.out.println(count);
+> stmt.close();
+> conn.close();
+> ```
+>
+> 
+>
+> 2、JDBC+工具类
+>
+> 更进一步：
+>
+> 我们发现这样做有很多缺点，首先就是代码很长比较繁琐，其次是不灵活，因为我们直接把配置写到了代码里，这样很不规范，我们应该把配置单独写到一个文件里，供程序读取，这样我们只修改配置文件就可以了。
+>
+> 因此，我们可以采用下面大标题  **抽取JDBC工具类 ： JDBCUtils**的步骤，来创建一个工具类，这样我们就方便了很多，代码更标准，且配置容易修改了。此时的目录结构很简单，就是libs（存放各种jar包）、package01（我们写代码的地方）、Utils（里面写工具类）、jdbc.properties（配置文件）
+>
+> 
+>
+> 3、数据库连接池+工具类+JDBC
+>
+> 再更进一步：
+>
+> 我们上述的那样，其实效率很低，因为实际的情况下，是用户需要完成查询操作，每个用户的请求被tomcat接受后，都会开一个线程处理，然后完成链接的建立、查询、释放的操作，这样很慢，且耗费资源，为此我们引入**数据库连接池**的概念，好处：节约资源、用户访问高效。
+>
+> 首先，我们需要导一些依赖jar包，以Druid为例。步骤是：导入jar包 、定义配置文件、加载配置文件、获取数据库连接池对象、获取连接 （注意我所说的这些步骤同样是麻烦的，可以参考md文件，我们同样需要定义工具类来简化）请参考md文件。此时的目录结构是
+>
+> 
+>
+> 4、数据库连接池+JDBCTemplate+工具类+JDBC
+>
+> 这样以后，想一下还不是很方便，因为我们需要建立连接，释放资源，这些代码还是要写，而且对于查询语句不太好操作，要定义sql字符串，获取preparestatement对象，赋值，执行，释放连接。而且对于处理查询操作也很麻烦。我们可以用JDBC Template ，这是Spring框架对JDBC的简单封装，它可以更方便。   使用这一套，不用释放，不用归还连接了。不用申请资源，不用释放连接。
+>
+> 步骤：1.同样先导入各种jar包，截止到目前，我们需要导入mysql的一个，druid的一个，jdbctemplate的一堆 2.工具类还是以前的， 3.在主代码处，通过JdbcTemplate template = new JdbcTemplate(ds);   对象来操作数据库，这样就很方便了。
+>
+> 
+>
+> 最终版目录结构，详细说明：
+>
+> <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220211111639162.png" alt="image-20220211111639162" style="zoom:67%;" />
+>
+> 0.首先把spring的一堆包和jdbc的一个，druid的一个导进来。
+>
+> 1.配置文件properties在src下，
+>
+> 2.domain里定义JavaBean（规范：类名UpperCase，变量名LowerCase，数据库全小写）
+>
+> 3.libs
+>
+> 4.utils写工具类，工具类是使用了数据库连接池的。
+>
+> 5.package写其他代码
+>
+> 层次：JDBC、JDBC+工具类、数据库连接池+工具类+JDBC、数据库连接池+JDBCTemplate+工具类+JDBC
+
+
+
+
+
 ## 今日内容
 
 	1. JDBC基本概念
@@ -11,6 +88,7 @@
 Java DataBase Connectivity           Java 数据库连接， Java语言操作数据库
 
 * JDBC本质：其实是官方（sun公司）定义的一套操作所有**关系型数据库**的规则，即**接口**。**各个数据库厂商去实现这套接口，提供数据库驱动jar包**。我们可以使用这套接口（JDBC）编程，**真正执行的代码是驱动jar包中的实现类**。
+* 也即实现通过不变java代码，只需要不同的jar包就可以操作不同的数据库
 
 因此如果你想使用mysql数据库你就需要先把mysql数据库提供的jar包导入到项目里。如果使用sun公司的，就导sun公司的jar包
 
@@ -482,7 +560,7 @@ public class JDBCUtils {
             Properties pro = new Properties();
 //获取src路径下的文件的方式--->ClassLoader 类加载器    //也可以不用类加载器，直接指定路径
             ClassLoader classLoader = JDBCUtils.class.getClassLoader();
-            URL res  = classLoader.getResource("jdbc.properties");
+            URL res = classLoader.getResource("jdbc.properties");
             String path = res.getPath();
 
 //2. 加载文件
@@ -705,7 +783,7 @@ public class JDBCDemo10 {
 
 ## 抽取JDBC工具类 ： JDBCUtils
 
-### 自己的实现
+### 1.自己的实现
 
 使用工具类的目的就是为了方便，简化代码的书写，
 
@@ -957,7 +1035,7 @@ public class Demo02_login {
 
 
 
-### 老师的实现
+### 2.老师的实现
 
 	* 目的：简化书写
 	* 分析：

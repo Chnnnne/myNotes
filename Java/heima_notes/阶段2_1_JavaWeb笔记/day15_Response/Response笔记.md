@@ -9,7 +9,7 @@
 
 ## HTTP协议：
 
-### 请求消息：
+### 请求消息：（复习）
 
 客户端发送给服务器端的数据
 
@@ -19,6 +19,34 @@
 	3. 请求空行
 	4. 请求体
 
+```http
+POST /login.html	HTTP/1.1                                         行
+Host: localhost                                            头
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Referer: http://localhost/login.html
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+                                                          空行
+username=zhangsan		                      	请求体 POST才有
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### 响应消息：
 
 服务器端发送给客户端的数据
@@ -26,12 +54,12 @@
 #### 响应字符串格式
 
 ```http
-HTTP/1.1 200 OK
-Content-Type: text/html;charset=UTF-8
+HTTP/1.1 200 OK								 响应行
+Content-Type: text/html;charset=UTF-8			响应头
 Content-Length: 101
 Date: Wed, 06 Jun 2018 07:08:42 GMT
-
-<html>
+													响应空行
+<html>												响应体
 	<head>
     	<title>$Title$</title>
 	</head>
@@ -235,7 +263,7 @@ request.getRequestDispatcher("/requestDemo9").forward(request,response);
 		
 		* ../:后退一级目录
 		
-		  > 例子： a.html 和b.html 都位于 /day15目录下， 那么从 a跳转到b  可以写成<a href="b.html或者./b.html"><a>
+		  > 例子： a.html 和b.html 都位于 /day15目录下， 那么从 a跳转到b  可以写成\<a href="b.html或者./b.html">\<a>
 		  
 		  
 
@@ -297,10 +325,11 @@ request.getRequestDispatcher("/requestDemo9").forward(request,response);
 	   
 	           //获取流对象之前，设置流的默认编码：ISO-8859-1 设置为：GBK
 	          // response.setCharacterEncoding("utf-8");
-	   
 	           //告诉浏览器，服务器发送的消息体数据的编码。建议浏览器使用该编码解码
 	           //response.setHeader("content-type","text/html;charset=utf-8");
 	   
+	           //等价↓
+	           
 	           //简单的形式，设置编码
 	           response.setContentType("text/html;charset=utf-8");
 	           //1.获取字符输出流
@@ -634,9 +663,9 @@ public class DownloadServlet extends HttpServlet {
         //3.设置response的响应头
         //3.1设置响应头类型：content-type
         String mimeType = servletContext.getMimeType(filename);//获取文件的mime类型
-        response.setHeader("content-type",mimeType);
+        response.setHeader("content-type", mimeType);
         //3.2设置响应头打开方式:content-disposition
-        response.setHeader("content-disposition","attachment;filename="+filename);
+        response.setHeader("content-disposition", "attachment;filename=" + filename);
         //4.将输入流的数据写出到输出流中
         ServletOutputStream sos = response.getOutputStream();
         byte[] buff = new byte[1024 * 8];

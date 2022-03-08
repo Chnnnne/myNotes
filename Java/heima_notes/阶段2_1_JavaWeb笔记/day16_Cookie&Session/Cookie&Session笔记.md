@@ -14,8 +14,12 @@ name value
 	1. 客户端会话技术：Cookie           (数据存到客户端)
 	2. 服务器端会话技术：Session    （数据存到服务器端）
 
-
 ## Cookie 甜点：
+
+##### 0、前置
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220224112216880.png" alt="image-20220224112216880" style="zoom:50%;" />
+
 ##### 1.概念：
 
 客户端会话技术，将数据保存到客户端
@@ -30,17 +34,62 @@ name value
 	3. 获取Cookie，拿到数据
 		* Cookie[]  **request.getCookies()**  
 
+**Cookie对象的方法**
+
 cookie.getName();
 
 cookie.getValue();
 
-cookie.setValue(str_date);
+cookie.setValue(str_date);  set完之后要重新response.add，如果不add的话没用
 
 ##### 3.实现原理
 
 * 基于**响应头set-cookie和请求头cookie**实现
 	
 	<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20201008173816903.png" alt="image-20201008173816903" style="zoom: 67%;" />
+
+
+
+在复习一下请求消息和响应消息
+
+请求消息
+
+```http
+POST /login.html	HTTP/1.1                                         行
+Host: localhost                                            头
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Referer: http://localhost/login.html
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+                                                          空行
+username=zhangsan		                      	请求体 POST才有
+```
+
+响应消息
+
+```http
+HTTP/1.1 200 OK								 响应行
+Content-Type: text/html;charset=UTF-8			响应头
+Content-Length: 101
+Date: Wed, 06 Jun 2018 07:08:42 GMT
+													响应空行
+<html>												响应体
+	<head>
+    	<title>$Title$</title>
+	</head>
+	<body>
+  		hello , response
+	</body>
+</html>
+```
+
+
+
+
+
 ##### 4.cookie的细节
 
 ###### 一次可不可以发送多个cookie?
@@ -172,9 +221,9 @@ public class CookieTest extends HttpServlet {
 
                 }
             }
-        }
+        }//有cookie在遍历之
 
-
+		//没cookie，或者有cookie但是没有lastTime，则
         if(cookies == null || cookies.length == 0 || flag == false){
             //没有，第一次访问
 
@@ -207,6 +256,127 @@ public class CookieTest extends HttpServlet {
 
 
 
+新实验：
+
+```jsp
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.net.URL" %>
+<%@ page import="java.net.URLDecoder" %>
+<%@ page import="java.net.URLEncoder" %><%--
+  Created by IntelliJ IDEA.
+  User: 95266
+  Date: 2020/11/12
+  Time: 14:26
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" errorPage="ErrorPage.jsp" %>
+<html>
+<head>
+    <title>Title</title>
+    <link rel="stylesheet" href="css/test.css";>
+</head>
+<body>
+<form method="get" action="${pageContext.request.contextPath}/Demo01Servlet">
+    <label for="username">Username:</label>
+    <input id="username" name="username" type="text">
+    <hr>
+
+    <label for="userpswd">Password:</label>
+    <input id="userpswd" name="userpswd" type="password">
+    <hr>
+    <h4>Please Select Your Gender:</h4>
+    male<input type="radio" name="gender" value="male" checked="true"> <br>
+    female<input type="radio" name="gender" value="female">
+    <hr>
+    <h4>Please Select Your Hobbies</h4>
+    唱歌<input type="checkbox" name="hobby" value="sing"><br>
+    画画<input type="checkbox" name="hobby" value="draw"><br>
+    跳舞<input type="checkbox" name="hobby" value="dance">
+    <hr>
+    请上传文件<input type="file">
+    <hr>
+
+
+    <select>
+        <option>xxx</option>
+        <option>yyy</option>
+        <option>zzz</option>
+        <option selected="selected">wangchen</option>
+    </select>
+
+    submit<input type="submit">
+    button<input type="button">
+    image<input type="image" src="img/password.png">
+</form>
+
+
+
+
+<h1>下面学习CSS简单用法</h1>
+<div class="ac-game-menu">
+    <div class="ac-game-menu-field">
+        <div class="ac-game-menu-field-item ac-game-menu-field-item-single-mode">
+            单人模式
+        </div>
+        <br>
+        <div class="ac-game-menu-field-item ac-game-menu-field-item-multi-mode">
+            多人模式
+        </div>
+        <br>
+        <div class="ac-game-menu-field-item ac-game-menu-field-item-settings">
+            设置
+        </div>
+    </div>
+</div>
+
+
+<h1>下面学习Cookie</h1>
+<%
+    Cookie[] cookies = request.getCookies();
+    boolean flag = false;
+    if(cookies != null && cookies.length != 0){
+        for (Cookie cookie : cookies) {
+            if("lastVisitTime".equals(cookie.getName())){
+                flag = true;
+                String value = cookie.getValue();
+                value = URLDecoder.decode(value, "utf-8");
+                out.print("<h1>欢迎回来，您上次访问的时间是：" +value +"</h1>");
+
+                Date date = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+                String newDate = sdf.format(date);
+                newDate = URLEncoder.encode(newDate, "utf-8");
+                cookie.setValue(newDate);
+                cookie.setMaxAge(60 * 60 * 24 * 30);
+                response.addCookie(cookie);
+                break;
+            }
+        }
+    }
+    if(cookies == null || cookies.length == 0 || flag == false){
+        Date date  = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        String str_date = sdf.format(date);
+        String temp = str_date;
+        str_date = URLEncoder.encode(str_date,"utf-8");
+
+        Cookie cookie = new Cookie("lastVisitTime",str_date);
+        //设置cookie的存活时间
+        cookie.setMaxAge(60 * 60 * 24 * 30);//一个月
+        response.addCookie(cookie);
+
+        out.print("<h1>您好欢迎您的首次访问！！当前时间："+ temp +"</h1>");
+    }
+
+%>
+
+<h1>下面学习Session</h1>
+</body>
+</html>
+
+```
+
 
 
 
@@ -234,6 +404,8 @@ public class CookieTest extends HttpServlet {
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20201010151324013.png" alt="image-20201010151324013" style="zoom:67%;" />
 
+在work目录下，有**实时生成的**文件，是**运行产生**的
+
 在cofg目录下有相关的 虚拟目录、实际项目所在位置的文件
 
 ![image-20201010151412065](C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20201010151412065.png)
@@ -242,7 +414,7 @@ public class CookieTest extends HttpServlet {
 
 
 
-在work目录下，有**实时生成的**文件，是**运行产生**的
+
 
 
 
@@ -250,7 +422,7 @@ public class CookieTest extends HttpServlet {
 
 
 
-看一下index.jsp源码 的主要部分
+看一下index_jsp.java源码 的主要部分
 
 ```java
 public final class index_jsp extends org.apache.jasper.runtime.HttpJspBase  
@@ -554,5 +726,101 @@ IDEA会钝化，但是不会活化成功。因此只能用Tomcat本地部署web�
 	2. 分析：
 	 验证码Servlet是一个请求，登录Servlet也是一个请求
 
+```java
+package cn.itcast.web.servlet;
 
-​	
+import cn.itcast.dao.UserDao1_login_Stu;
+import cn.itcast.domain.User;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+@WebServlet("/loginServlet")
+public class loginServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("utf-8");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String checkCode = request.getParameter("checkCode1") == null?
+                request.getParameter("checkCode2"):request.getParameter("checkCode1");
+        User loginUser = new User();
+        loginUser.setUsername(username);
+        loginUser.setPassword(password);
+
+        //user用于创建user对象并封装用户名和密码
+        // dao对象只是用于连接数据库 和验证操作，
+        // loginUser是实际对象
+        UserDao1_login_Stu dao = new UserDao1_login_Stu();
+        User user = dao.login(loginUser);
+
+        HttpSession session = request.getSession();
+        String checkCode_session = (String) session.getAttribute("checkCode_session");
+        session.removeAttribute("checkCode_session");
+
+        if (checkCode_session != null && checkCode_session.equalsIgnoreCase(checkCode)) {//验证码正确
+            if (user != null) {//用户名密码匹配成功
+                //登录成功！
+                String remember = request.getParameter("remember");
+                if (remember==null)//下面负责cookie的创建和销毁
+                {//选择不记录用户名和密码
+                    Cookie[] cookies = request.getCookies();
+                    for (Cookie cookie : cookies) {
+                        if(cookie.getName().equals("username"))
+                        {
+                            cookie.setMaxAge(0);
+                            response.addCookie(cookie);
+                        }
+                        if (cookie.getName().equals("password"))
+                            cookie.setMaxAge(0);
+                            response.addCookie(cookie);
+                    }
+                }
+                else{//记录用户名和密码
+                    Cookie cookie1 = new Cookie("username", username);
+                    cookie1.setMaxAge(60*10);
+                    Cookie cookie2 = new Cookie("password", password);
+                    cookie2.setMaxAge(60*10);
+                    response.addCookie(cookie1);
+                    response.addCookie(cookie2);
+                }
+
+                session.setAttribute("user", loginUser);//设置session
+                UserDao1_login_Stu dao3=new UserDao1_login_Stu();
+                if(dao3.isTeacher(loginUser))
+                {
+                    System.out.println("跳转到老师界面");
+                    response.sendRedirect("/test/TeacherHome.jsp");
+                }
+                else {
+                    System.out.println("跳转到学生界面");
+                    response.sendRedirect("/test/StudentHome.jsp");
+                }
+            } else {//验证码正确，但是用户名和密码不匹配
+                request.setAttribute("login_error", "用户名或密码错误");
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+            }
+
+
+        } else {  //验证码错误！
+            request.setAttribute("cc_error", "验证码错误");
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
+        }
+
+
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.doGet(req, resp);
+    }
+}
+```
+

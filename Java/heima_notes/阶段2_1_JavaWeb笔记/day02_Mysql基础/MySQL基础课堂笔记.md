@@ -1,5 +1,19 @@
 
+
+1.mysql的安装路径D:\develop\MySQL，目录结构
+
+2.安装路径下的目录结构里有my.ini，里面放着配置信息
+
+> #Path to installation directory. All paths are usually resolved relative to this.
+> basedir="D:/develop/MySQL/"
+>
+> #Path to the database root
+> datadir="C:/ProgramData/MySQL/MySQL Server 5.5/Data/"
+
+<img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20220209101832527.png" alt="image-20220209101832527" style="zoom:50%;" />
+
 # MySQL数据库软件
+
 1. 安装
 	
 	* 参见《MySQL基础.pdf》
@@ -30,7 +44,7 @@
 	
 	
 	
-
+	
 	
 	
 	
@@ -76,7 +90,7 @@
 	4. 3 种注释
 		* 单行注释: -- 注释内容 或 # 注释内容(mysql 特有)      --后必须要有空格，#后可以有可以无空格
 		* 多行注释: /* 注释 */
-	
+
 
 3. SQL分类
 	1) DDL(Data Definition Language)数据定义语言

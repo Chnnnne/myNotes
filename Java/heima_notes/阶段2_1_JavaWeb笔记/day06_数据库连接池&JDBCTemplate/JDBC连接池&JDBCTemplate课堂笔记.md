@@ -167,6 +167,8 @@
    
 ##### 定义工具类
 
+采用上述的连接池技术后，工具类也要跟着完善。
+
 1. 定义一个包、一个类 JDBCUtils
 2. 在JDBCUtils类中提供静态代码块加载配置文件，初始化连接池对象
 3. 提供方法
@@ -188,7 +190,7 @@ public class JDBCUtils {
         try {
             //1.加载配置文件
             Properties pro = new Properties();
-            pro.load(JDBCUtils.class.getClassLoader().getResourceAsStream("druid.properties"));
+   pro.load(JDBCUtils.class.getClassLoader().getResourceAsStream("druid.properties"));
             //2.获取DataSource
             ds = DruidDataSourceFactory.createDataSource(pro);
         } catch (IOException e) {
@@ -327,7 +329,7 @@ public class DruidDemo2 {
 1. **导入jar包**
 
    下面是需要导入的            (另外还有数据库一个 和Druid  一个也要)
- <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200924153534049.png" alt="image-20200924153534049" style="zoom:67%;" />
+    <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200924153534049.png" alt="image-20200924153534049" style="zoom:67%;" />
 
    
    
@@ -343,7 +345,7 @@ public class DruidDemo2 {
 
    **查询**结果将结果集封装为map集合，将列名作为key (String 类型)，将值作为value (Object类型)将这条记录封装为一个map集合
 
-       - 注意：这个方法查询的结果集长度只能是1   因此查询的记录只能是1不能有多条，0都不行
+       - 注意：这个方法查询的结果集长度只能是1   因此查询的记录只能是1不能有多条，0都不行。也即是一行，而不是多行，每行可以有好几列
 
 
 ​    
@@ -362,7 +364,7 @@ public class DruidDemo2 {
       - new BeanPropertyRowMapper<类型>(类型.class)
    
         ```java
-    List<Emp> list = template.query(sql, new BeanPropertyRowMapper<Emp>(Emp.class));
+         List<Emp> list = template.query(sql, new BeanPropertyRowMapper<Emp>(Emp.class));
         ```
 
         
@@ -448,7 +450,6 @@ public class DruidDemo2 {
 	        String sql = "insert into emp(id,ename,dept_id) values(?,?,?)";
 	        int count = template.update(sql, 1015, "郭靖", 10);
 	        System.out.println(count);
-	
 	    }
 	    /**
 	     * 3.删除刚才添加的记录

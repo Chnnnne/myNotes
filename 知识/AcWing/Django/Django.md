@@ -1947,24 +1947,24 @@ js是跑在浏览器的高级程序语言，核心思想是对象。
 
 #### 1、常用端口号
 
-| 网络服务 | 端口号 | 套接字 |
-| -------- | ------ | ------ |
-| FTP数据  | 20     | tcp    |
-| FTP控制  | 21     | tcp    |
-| SSH      | 22     | tcp    |
-| Telnet   | 23     | tcp    |
-| SMTP     | 25     | tcp    |
-| **HTTP** | **80** | tcp    |
-| POP3     | 110    | tcp    |
-| HTTPS    | 443    | tcp    |
-| SOCKS    | 1080   | tcp    |
-| DNS      | 53     | udp    |
-| DHCP     | 67     | udp    |
-| TFTP     | 69     | udp    |
-| MySQL    | 3306   |        |
-| Mongodb  | 27017  |        |
-| Tomcat   | 8080   |        |
-| 调试     | 8000   |        |
+| 网络服务  | 端口号  | 套接字  |
+| --------- | ------- | ------- |
+| FTP数据   | 20      | tcp     |
+| FTP控制   | 21      | tcp     |
+| **SSH**   | **22**  | **tcp** |
+| Telnet    | 23      | tcp     |
+| SMTP      | 25      | tcp     |
+| **HTTP**  | **80**  | tcp     |
+| POP3      | 110     | tcp     |
+| **HTTPS** | **443** | **tcp** |
+| SOCKS     | 1080    | tcp     |
+| DNS       | 53      | udp     |
+| DHCP      | 67      | udp     |
+| TFTP      | 69      | udp     |
+| MySQL     | 3306    |         |
+| Mongodb   | 27017   |         |
+| Tomcat    | 8080    |         |
+| 调试      | 8000    |         |
 
 
 

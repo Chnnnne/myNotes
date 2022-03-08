@@ -101,7 +101,7 @@ http://tomcat.apache.org/
 * bin/startup.bat ,双击运行该文件即可
 * 访问：浏览器输入：http://localhost:8080 回车访问自己
 				                        http://别人的ip:8080 访问别人
-我（王晨）的是192.168.154.1
+				                       我（王晨）的是192.168.154.1
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200919111027659.png" alt="image-20200919111027659" style="zoom:50%;" />
 
@@ -157,9 +157,10 @@ http://tomcat.apache.org/
 
 部署项目的方式：
 1. 直接将项目（项目文件夹，或者war文件）放到webapps目录下即可。
-	* /hello：项目的访问路径，也即虚拟目录（虚拟路径就是你在浏览器上输入的）
-	* 简化部署：将项目打成一个war包，再将war包放置到webapps目录下。
+	* /hello：项目**的访问路径**，也即**虚拟目录**（虚拟路径就是你在浏览器上输入的）
+	* 简化部署：将项目打成一个war包（可以先变成zip，然后改后缀为war），再将war包放置到webapps目录下。
 		* war包会自动解压缩（也即自动变成一个文件夹）
+		* 当我们删除这个war包时，这个文件夹也会被删除。
 
 
 
@@ -172,16 +173,16 @@ http://tomcat.apache.org/
    在``<Host>``标签体中配置  ，自己加
    `<Context docBase="D:\hello" path="/hehe" />`
 
-* docBase:项目存放的路径(在电脑中的路径)
-* path：虚拟目录（浏览器上输入的）  虚拟目录是项目的访问方式
+* **docBase:项目存放的路径(在电脑中的路径)**
+* **path：虚拟目录（浏览器上输入的）  虚拟目录是项目的访问方式**
 
-不建议这样配置，
+不建议这样配置，因为毕竟server.xml是tomcat的整体大局配置，在这里配置不太好。
 
 
 
 3. 在conf \ Catalina \ localhost 创建任意名称的xml文件。比如说xml文件名是bbb.xml，在文件中编写
    `<Context docBase="D:\hello" />`
-   现在的虚拟目录就变成了：xml文件的名称 也即bbb。因此不用写path（虚拟路径）只需要写一个docBase即可
+   现在的虚拟目录就变成了：xml文件的名称 也即bbb。因此不用写path（虚拟路径）只需要写一个docBase即可。也即虚拟目录（访问路径）就是文件名，实际项目所在本地电脑位置是docBase指定的。
 
    好处：
 
@@ -208,7 +209,19 @@ http://tomcat.apache.org/
 
 ## 四、将Tomcat集成到IDEA中，
 
-[这个讲得很好](https://blog.csdn.net/weixin_43716048/article/details/108639475)
+> 一个思路：Tomcat是一个服务器软件，我们可以在一个电脑上打开多个Tomcat服务器软件，一个Tomcat服务器软件上又可以放很多web项目，而**Idea只是一个方便我们管理的工具。**
+>
+> 也即层次是 
+> **服务器电脑—Tomcat服务器软件—Web项目**
+>
+> 那么他们都在什么目录里呢？
+>
+> web项目实际所在位置（由idea里的东西指示）如：D:\Idea_Workplace\testEmptyProject\out\artifacts\webDemo01_war_exploded
+>
+> 配置文件所在位置：
+> C:\Users\95266\AppData\Local\JetBrains\IntelliJIdea2020.2\tomcat\Unnamed_testEmptyProject
+
+[这个讲得很好](https://blog.csdn.net/llplllll/article/details/116903198?spm=1001.2101.3001.6650.4&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-4.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-4.pc_relevant_default&utm_relevant_index=9)
 
 并且创建JavaEE的项目，部署项目。
 
@@ -507,35 +520,39 @@ public class ServletDemo implements Servlet {
 
 
 
-	    @Target({ElementType.TYPE})
-		@Retention(RetentionPolicy.RUNTIME)
-		@Documented
-		public @interface WebServlet {
-		    String name() default "";//相当于<Servlet-name>
-	    String[] value() default {};//代表urlPatterns()属性配置
-	
-	    String[] urlPatterns() default {};//相当于<url-pattern>
-	
-	    int loadOnStartup() default -1;//相当于<load-on-startup>
-	
-	    WebInitParam[] initParams() default {};
-	
-	    boolean asyncSupported() default false;
-	
-	    String smallIcon() default "";
-	
-	    String largeIcon() default "";
-	
-	    String description() default "";
-	
-	    String displayName() default "";
-	}
+```java
+    @Target({ElementType.TYPE})
+	@Retention(RetentionPolicy.RUNTIME)
+	@Documented
+	public @interface WebServlet {
+	    String name() default "";//相当于<Servlet-name>
+    String[] value() default {};//代表urlPatterns()属性配置
+
+    String[] urlPatterns() default {};//相当于<url-pattern>
+
+    int loadOnStartup() default -1;//相当于<load-on-startup>
+
+    WebInitParam[] initParams() default {};
+
+    boolean asyncSupported() default false;
+
+    String smallIcon() default "";
+
+    String largeIcon() default "";
+
+    String description() default "";
+
+    String displayName() default "";
+}
+```
 
 
 
 
 
+#### 问题
 
+[IntelliJ IDEA关于“cannot resolve symbol servlet”的解决](https://blog.csdn.net/just_now_and_future/article/details/81235318)
 
 
 
@@ -545,8 +562,9 @@ public class ServletDemo implements Servlet {
 
 ##### 一、IDEA会为每一个tomcat部署的项目单独建立一份配置文件
 
-* 查看控制台的log：Using CATALINA_BASE:   "C:\Users\fqy\.IntelliJIdea2018.1\system\tomcat\_itcast"
-* 我的（王晨）的是C:\Users\95266\AppData\Local\JetBrains\IntelliJIdea2020.1\tomcat\_Project03_html&css
+* 查看控制台的log：Using CATALINA_BASE:   "C:\Users\fqy\.IntelliJIdea2018.1\system\tomcat\_itcast"，这个是视频里的地址
+* 我的实验：
+  我的（王晨）的是C:\Users\95266\AppData\Local\JetBrains\IntelliJIdea2020.1\tomcat\_Project03_html&css
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200920111425273.png" alt="image-20200920111425273" style="zoom:67%;" />
 
@@ -596,7 +614,7 @@ public class ServletDemo implements Servlet {
 
 
 
-* **WEB-INF目录下的资源不能被浏览器直接访问。**
+* **WEB-INF目录下的资源不能被浏览器*直接*访问。**
 
 <img src="C:\Users\95266\AppData\Roaming\Typora\typora-user-images\image-20200920112600124.png" alt="image-20200920112600124" style="zoom:50%;" />
 
